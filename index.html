@@ -23,6 +23,10 @@
       measurementId: "G-58BRLWTPDY"
     };
 
+    // Handle subdirectory hosting (GitHub Pages project site)
+    const currentUrl = new URL(window.location.href);
+    const isSubdirectory = currentUrl.pathname.includes('/ibnalarabstore');
+
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
@@ -961,38 +965,28 @@
   </div>
 
   <!-- Splash / Login Screen -->
-  <div id="splash-screen">
-    <div class="splash-bg"></div>
-    <div class="splash-content">
-      <div class="splash-icon" style="background: transparent; border: none; box-shadow: none;">
-        <img src="yaahlan icon.jpg" alt="Yaahlan Chat" style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-xl);" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-light), var(--primary))'; this.parentElement.style.border='2px solid var(--border-hover)'; this.parentElement.style.boxShadow='var(--shadow-glow)'; this.parentElement.innerHTML='💎';">
+    <!-- Login Modal -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal" style="text-align: center;">
+      <div class="modal-header">
+        <div style="width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 20px; overflow: hidden;">
+          <img src="yaahlan icon.jpg" alt="Yaahlan" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-light), var(--primary))'; this.parentElement.innerHTML='💎';">
+        </div>
+        <div class="modal-title">تسجيل الدخول</div>
+        <div class="modal-subtitle">سجل دخولك لإتمام طلبات الشحن</div>
       </div>
 
-      <div class="splash-title" style="direction: ltr; unicode-bidi: bidi-override;">
-        <span class="anim-slide-left anim-delay-1">IBN</span>
-        <span style="display: inline-block; width: 16px;"></span>
-        <span class="anim-drop anim-delay-2">AL</span>
-        <span style="display: inline-block; width: 16px;"></span>
-        <span class="anim-slide-right anim-delay-3">ARAB</span>
-      </div>
-
-      <div class="splash-line anim-fade-in anim-delay-4"></div>
-
-      <div class="splash-subtitle anim-fade-in-up anim-delay-4" style="color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; background: none !important;">شـــحـــن</div>
-
-      <div class="splash-desc anim-fade-in anim-delay-5">
-        شحن الماسات Yaahlan Chat — سريع، آمن، وموثوق
-      </div>
-
-      <button class="btn btn-google anim-fade-in-up anim-delay-5" id="btn-google" onclick="handleGoogleLogin()">
+      <button class="btn btn-google btn-block" onclick="handleGoogleLogin()" style="margin-bottom: 12px;">
         <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.74 0 3.3.6 4.53 1.78l3.4-3.4C17.95 1.18 15.24 0 12 0 7.31 0 3.23 2.7 1.54 6.61l3.96 3.08C6.46 6.8 9.02 5.04 12 5.04z"/><path fill="#34A853" d="M23.5 12.28c0-.86-.08-1.68-.22-2.48H12v4.7h6.45c-.28 1.48-1.1 2.73-2.34 3.57l3.78 2.93c2.2-2.04 3.61-5.04 3.61-8.72z"/><path fill="#FBBC05" d="M5.5 14.69l-3.96 3.08C3.23 21.3 7.31 24 12 24c3.24 0 5.95-1.18 7.93-3.19l-3.78-2.93c-1.06.71-2.42 1.13-4.15 1.13-3.2 0-5.92-2.16-6.89-5.08z"/><path fill="#4285F4" d="M12 5.04c3.2 0 5.92 2.16 6.89 5.08l3.96-3.08C21.23 2.7 17.15 0 12 0c-3.24 0-5.95 1.18-7.93 3.19l3.78 2.93C8.78 5.04 10.26 5.04 12 5.04z"/></svg>
         تسجيل الدخول بحساب Google
       </button>
+
+      <button class="btn btn-outline btn-block" onclick="closeModal('login-modal')">تصفح كزائر</button>
     </div>
   </div>
 
-  <!-- Main App -->
-  <div id="main-app" style="display: none;">
+<!-- Main App -->
+  <div id="main-app" style="display: block; opacity: 1;">
 
     <!-- Header -->
     <header class="header">
@@ -1005,7 +999,8 @@
         </a>
         <div class="header-actions">
           <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
-          <div style="position: relative;">
+          <button class="btn btn-primary" id="header-login-btn" onclick="openModal('login-modal')" style="padding: 8px 20px; font-size: 13px;">تسجيل الدخول</button>
+          <div style="position: relative; display: none;" id="user-menu-container">
             <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">
               <img src="" alt="" id="user-avatar-img" style="display: none;">
               <span id="user-avatar-icon">👤</span>
@@ -1491,6 +1486,7 @@
 
     // ===== AUTH =====
     function handleGoogleLogin() {
+      closeModal('login-modal');
       showLoading(translations[currentLang].loggingIn);
 
       if (window.firebaseSignIn) {
@@ -1501,6 +1497,7 @@
           })
           .catch((error) => {
             hideLoading();
+            console.error('Login error:', error);
             showToast(translations[currentLang].loginRequired + ': ' + error.message, 'error');
           });
       } else {
@@ -1512,7 +1509,7 @@
             email: 'demo@example.com',
             photoURL: ''
           };
-          showMainApp();
+          updateUI();
           setTimeout(() => openModal('profile-modal'), 300);
         }, 1500);
       }
@@ -1521,7 +1518,7 @@
     async function checkUserProfile() {
       if (!window.firebaseGetDoc) {
         hideLoading();
-        showMainApp();
+        updateUI();
         setTimeout(() => openModal('profile-modal'), 500);
         return;
       }
@@ -1536,14 +1533,13 @@
         if (userDoc.exists()) {
           userData = userDoc.data();
           updateUI();
-          showMainApp();
         } else {
-          showMainApp();
+          updateUI();
           setTimeout(() => openModal('profile-modal'), 500);
         }
       } catch (error) {
         hideLoading();
-        showMainApp();
+        updateUI();
         setTimeout(() => openModal('profile-modal'), 500);
         showToast('Error loading data', 'error');
       }
@@ -1555,18 +1551,30 @@
         window.firebaseSignOut().then(() => {
           currentUser = null;
           userData = null;
-          location.reload();
+          updateUI();
+          showToast('تم تسجيل الخروج', 'success');
         });
       } else {
         currentUser = null;
         userData = null;
-        location.reload();
+        updateUI();
+        showToast('تم تسجيل الخروج', 'success');
       }
     }
 
     // ===== UI UPDATES =====
     function updateUI() {
-      if (!currentUser) return;
+      const loginBtn = document.getElementById('header-login-btn');
+      const userMenuContainer = document.getElementById('user-menu-container');
+
+      if (!currentUser) {
+        if (loginBtn) loginBtn.style.display = 'inline-flex';
+        if (userMenuContainer) userMenuContainer.style.display = 'none';
+        return;
+      }
+
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (userMenuContainer) userMenuContainer.style.display = 'block';
 
       const avatarImg = document.getElementById('user-avatar-img');
       const avatarIcon = document.getElementById('user-avatar-icon');
@@ -1710,6 +1718,7 @@
 
       if (!currentUser) {
         showToast(t.loginRequired, 'warning');
+        setTimeout(() => openModal('login-modal'), 1000);
         return;
       }
 
@@ -1797,6 +1806,13 @@
     // ===== WALLET =====
     function openWalletModal() {
       const t = translations[currentLang];
+
+      if (!currentUser) {
+        showToast(t.loginRequired, 'warning');
+        setTimeout(() => openModal('login-modal'), 1000);
+        return;
+      }
+
       document.getElementById('wallet-amount-input').value = '';
       document.getElementById('wallet-summary-amount').textContent = '-';
       document.getElementById('wallet-summary-total').textContent = '-';
@@ -1925,14 +1941,21 @@
 
     // ===== INIT =====
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded, checking auth...');
+
       // Check auth state
       if (window.firebaseOnAuth) {
         window.firebaseOnAuth((user) => {
+          console.log('Auth state changed:', user ? 'logged in' : 'not logged in');
           if (user) {
             currentUser = user;
             checkUserProfile();
+          } else {
+            updateUI();
           }
         });
+      } else {
+        updateUI();
       }
 
       // Initialize prices
