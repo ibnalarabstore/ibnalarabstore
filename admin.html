@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>لوحة تحكم الأدمن | ابن العرب</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,37 +34,45 @@
         .nav-text { font-size: 15px; font-weight: 500; }
         .logout-btn { margin-top: auto; color: var(--danger) !important; }
 
+        /* خلفية تعتيم عند فتح القائمة في الجوال */
+        .overlay-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90; display: none; }
+        .overlay-bg.active { display: block; }
+
         /* المحتوى */
-        .main-content { flex: 1; margin-right: 250px; padding: 32px; transition: var(--transition); width: calc(100% - 250px); }
+        .main-content { flex: 1; margin-right: 250px; padding: 24px; transition: var(--transition); width: calc(100% - 250px); }
         .sidebar.collapsed ~ .main-content { margin-right: 80px; width: calc(100% - 80px); }
-        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; background: var(--bg-card); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border-color); }
-        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; background: var(--bg-card); padding: 12px 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .topbar-left { display: flex; align-items: center; gap: 12px; }
         .toggle-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
-        .page-title { font-size: 22px; font-weight: 700; }
+        .page-title { font-size: 18px; font-weight: 700; }
         .user-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
 
         /* الجداول والبطاقات */
-        .data-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 32px; overflow-x: auto; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .card-title { font-size: 18px; font-weight: 700; }
+        .data-card { background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 32px; overflow: hidden; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title { font-size: 16px; font-weight: 700; }
+        
+        /* تعديل مهم لجعل الجدول قابل للتمرير أفقياً على الجوال */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { text-align: right; padding: 12px 16px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        td { text-align: right; padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { text-align: right; padding: 12px 16px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border-color); font-size: 13px; white-space: nowrap; }
+        td { text-align: right; padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 13px; white-space: nowrap; }
         tr:last-child td { border-bottom: none; }
         
         /* أزرار الإجراءات */
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal'; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; }
+        .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal'; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
         .btn-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
         .btn-success:hover { background: var(--success); color: white; }
         
         .loader { text-align: center; padding: 40px; color: var(--text-muted); }
 
         /* نافذة منبثقة (Modal) لشحن الرصيد */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: var(--bg-card); padding: 32px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; }
-        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+        .modal-box { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 14px; }
         .form-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 16px; }
@@ -73,14 +81,23 @@
         .btn-close { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .btn-close:hover { background: var(--danger); color: white; }
 
+        /* تجاوب الشاشات للهواتف */
         @media (max-width: 768px) {
-            .sidebar { transform: translateX(100%); }
-            .main-content { margin-right: 0; width: 100%; }
+            .sidebar { transform: translateX(100%); z-index: 110; } /* مخفية افتراضياً للجوال */
             .sidebar.active { transform: translateX(0); }
+            .main-content { margin-right: 0; width: 100%; padding: 16px; }
+            .topbar { padding: 10px 14px; }
+            .page-title { font-size: 16px; }
+            .admin-name-text { display: none; } /* إخفاء النص بجانب الأفاتار في التوب بار لتوفير المساحة */
+            .data-card { padding: 16px; }
+            .modal-box { padding: 20px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- خلفية تعتيم عند فتح المنيو في الجوال -->
+    <div class="overlay-bg" id="overlayBg" onclick="closeSidebarMobile()"></div>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -95,12 +112,12 @@
         <header class="topbar">
             <div class="topbar-left">
                 <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title">إدارة المستخدمين والمحافظ</h1>
+                <h1 class="page-title">إدارة المستخدمين</h1>
             </div>
             <div class="user-profile">
                 <div class="avatar" id="adminAvatar">A</div>
-                <div style="display: flex; flex-direction: column;">
-                    <span style="font-weight: 600; font-size: 14px;" id="adminName">مدير المتجر</span>
+                <div style="display: flex; flex-direction: column;" class="admin-name-text">
+                    <span style="font-weight: 600; font-size: 13px;" id="adminName">مدير المتجر</span>
                 </div>
             </div>
         </header>
@@ -110,8 +127,11 @@
             <div class="card-header">
                 <div class="card-title">قائمة المستخدمين</div>
             </div>
-            <div id="usersTableContainer">
-                <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل المستخدمين...</div>
+            <!-- إضافة غلاف للجدول لجعله قابل للتمرير -->
+            <div class="table-responsive">
+                <div id="usersTableContainer">
+                    <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل المستخدمين...</div>
+                </div>
             </div>
         </div>
     </main>
@@ -120,7 +140,7 @@
     <div class="modal-overlay" id="balanceModal">
         <div class="modal-box">
             <h3 class="modal-title">شحن رصيد المستخدم (Wallet)</h3>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">المستخدم: <span id="modalUserName" style="color: var(--text-main); font-weight: bold;"></span></p>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">المستخدم: <span id="modalUserName" style="color: var(--text-main); font-weight: bold;"></span></p>
             <div class="form-group">
                 <label class="form-label">المبلغ المطلوب إضافته ($)</label>
                 <input type="number" class="form-input" id="amountToAdd" placeholder="مثال: 50" min="1" step="0.01">
@@ -157,18 +177,15 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // محاولة جلب المستخدمين للتأكد من صلاحية الأدمن (بناء على قواعد الأمان)
                     await getDocs(collection(db, "users"));
                     document.getElementById("adminName").innerText = user.email || "مدير";
                     document.getElementById("adminAvatar").innerText = (user.email || "A").charAt(0).toUpperCase();
-                    
                     loadUsers();
                 } catch (error) {
                     alert("ليس لديك صلاحية للوصول إلى لوحة التحكم.");
-                    window.location.href = "index.html"; // تعديل لاسم صفحتك الرئيسية
+                    window.location.href = "index.html";
                 }
             } else {
-                // يجب تعديل هذا الرابط لصفحة تسجيل الدخول الخاصة بك
                 window.location.href = "index.html"; 
             }
         });
@@ -185,7 +202,7 @@
                                 <th>الاسم</th>
                                 <th>الهاتف</th>
                                 <th>Yaahlan ID</th>
-                                <th>الرصيد (Wallet)</th>
+                                <th>الرصيد</th>
                                 <th>إجراءات</th>
                             </tr>
                         </thead>
@@ -202,7 +219,6 @@
                         const yaahlanId = userData.yaahlanId || 'غير متوفر';
                         const wallet = userData.wallet || 0;
                         
-                        // تخزين الاسم والـ ID في خصائص الزر لسهولة الوصول إليها
                         tableHTML += `
                             <tr>
                                 <td>${name}</td>
@@ -211,7 +227,7 @@
                                 <td style="color: var(--success); font-weight: bold;">$${wallet}</td>
                                 <td>
                                     <button class="btn btn-success" onclick="openBalanceModal('${d.id}', \`${name}\`)">
-                                        <i class="fas fa-plus"></i> شحن الرصيد
+                                        <i class="fas fa-plus"></i> شحن
                                     </button>
                                 </td>
                             </tr>
@@ -247,23 +263,37 @@
 
             try {
                 const userRef = doc(db, "users", currentUserIdToCharge);
-                // استخدام increment لإضافة المبلغ إلى حقل wallet بأمان تام
                 await updateDoc(userRef, {
                     wallet: increment(amount)
                 });
                 
                 alert("تم شحن الرصيد بنجاح للمستخدم!");
                 closeModal();
-                loadUsers(); // إعادة تحميل الجدول لعرض الرصيد الجديد
+                loadUsers(); 
             } catch (error) {
                 console.error("Error adding balance: ", error);
                 alert("حدث خطأ أثناء شحن الرصيد: " + error.message);
             }
         };
 
-        // أزرار التحكم
+        // فتح وإغلاق القائمة الجانبية (للجوال)
+        window.closeSidebarMobile = () => {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlayBg').classList.remove('active');
+        };
+
         document.getElementById('toggleBtn').addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('collapsed');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlayBg');
+            
+            // إذا كانت الشاشة كبيرة (كمبيوتر)
+            if (window.innerWidth > 768) {
+                sidebar.classList.toggle('collapsed');
+            } else {
+                // إذا كانت شاشة صغيرة (جوال)
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
