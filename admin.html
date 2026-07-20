@@ -6,36 +6,28 @@
     <title>لوحة تحكم الأدمن | ابن العرب</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --bg-sidebar: #111827;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --accent-color: #6366f1;
-            --accent-gold: #f59e0b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border-color: #334155;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-main: #0f172a; --bg-card: #1e293b; --bg-sidebar: #111827;
+            --text-main: #f1f5f9; --text-muted: #94a3b8;
+            --accent-color: #6366f1; --accent-gold: #f59e0b;
+            --success: #10b981; --danger: #ef4444;
+            --border-color: #334155; --transition: all 0.3s ease;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; }
 
         /* القائمة الجانبية */
-        .sidebar { width: 260px; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; border-left: 1px solid var(--border-color); transition: var(--transition); position: fixed; height: 100vh; z-index: 100; }
+        .sidebar { width: 250px; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; border-left: 1px solid var(--border-color); position: fixed; height: 100vh; z-index: 100; transition: var(--transition); }
         .sidebar.collapsed { width: 80px; }
         .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 0 12px 24px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
         .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; flex-shrink: 0; }
         .logo-text { font-size: 20px; font-weight: 800; white-space: nowrap; }
         .sidebar.collapsed .logo-text, .sidebar.collapsed .nav-text { opacity: 0; width: 0; display: none; }
-        .nav-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: var(--transition); margin-bottom: 8px; text-decoration: none; }
+        .nav-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: var(--transition); margin-bottom: 8px; }
         .nav-item:hover, .nav-item.active { background: rgba(99, 102, 241, 0.1); color: var(--text-main); }
         .nav-item.active { border-right: 3px solid var(--accent-color); }
         .nav-item i { font-size: 18px; width: 24px; text-align: center; }
@@ -43,46 +35,45 @@
         .logout-btn { margin-top: auto; color: var(--danger) !important; }
 
         /* المحتوى */
-        .main-content { flex: 1; margin-right: 260px; padding: 32px; transition: var(--transition); width: calc(100% - 260px); }
+        .main-content { flex: 1; margin-right: 250px; padding: 32px; transition: var(--transition); width: calc(100% - 250px); }
         .sidebar.collapsed ~ .main-content { margin-right: 80px; width: calc(100% - 80px); }
         .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; background: var(--bg-card); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border-color); }
         .topbar-left { display: flex; align-items: center; gap: 16px; }
         .toggle-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
-        .toggle-btn:hover { color: var(--accent-color); }
         .page-title { font-size: 22px; font-weight: 700; }
-        .topbar-right { display: flex; align-items: center; gap: 16px; }
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .user-profile { display: flex; align-items: center; gap: 10px; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        /* البطاقات */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 32px; }
-        .stat-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); transition: var(--transition); position: relative; overflow: hidden; }
-        .stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%); transform: translate(30%, -30%); }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2); }
-        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .bg-purple { background: rgba(99, 102, 241, 0.1); color: var(--accent-color); }
-        .bg-gold { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); }
-        .bg-green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        .bg-red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-        .stat-value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
-        .stat-label { color: var(--text-muted); font-size: 14px; }
-
-        /* الجداول */
-        .data-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 32px; }
+        /* الجداول والبطاقات */
+        .data-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 32px; overflow-x: auto; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .card-title { font-size: 18px; font-weight: 700; }
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th { text-align: right; padding: 12px 16px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         td { text-align: right; padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
         tr:last-child td { border-bottom: none; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); }
-        .status-completed { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-
-        .loader { text-align: center; padding: 40px; color: var(--text-muted); }
         
-        @media (max-width: 992px) {
+        /* أزرار الإجراءات */
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal'; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; }
+        .btn-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .btn-success:hover { background: var(--success); color: white; }
+        
+        .loader { text-align: center; padding: 40px; color: var(--text-muted); }
+
+        /* نافذة منبثقة (Modal) لشحن الرصيد */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: var(--bg-card); padding: 32px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 14px; }
+        .form-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 16px; }
+        .form-input:focus { border-color: var(--accent-color); }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+        .btn-close { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-close:hover { background: var(--danger); color: white; }
+
+        @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); }
             .main-content { margin-right: 0; width: 100%; }
             .sidebar.active { transform: translateX(0); }
@@ -93,91 +84,59 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="logo-icon"><i class="fas fa-globe"></i></div>
+            <div class="logo-icon"><i class="fas fa-store"></i></div>
             <div class="logo-text">ابن العرب</div>
         </div>
-        <a class="nav-item active"><i class="fas fa-chart-pie"></i><span class="nav-text">نظرة عامة</span></a>
-        <a class="nav-item"><i class="fas fa-users"></i><span class="nav-text">المستخدمين</span></a>
-        <a class="nav-item"><i class="fas fa-shopping-bag"></i><span class="nav-text">الطلبات</span></a>
-        <a class="nav-item"><i class="fas fa-wallet"></i><span class="nav-text">المعاملات</span></a>
-        <a class="nav-item"><i class="fas fa-cog"></i><span class="nav-text">الإعدادات والأسعار</span></a>
-        <a class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span class="nav-text">تسجيل الخروج</span></a>
+        <div class="nav-item active"><i class="fas fa-users"></i><span class="nav-text">المستخدمين والأرصدة</span></div>
+        <div class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span class="nav-text">تسجيل الخروج</span></div>
     </aside>
 
     <main class="main-content">
         <header class="topbar">
             <div class="topbar-left">
                 <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title">لوحة تحكم الإدارة</h1>
+                <h1 class="page-title">إدارة المستخدمين والمحافظ</h1>
             </div>
-            <div class="topbar-right">
-                <div class="user-profile">
-                    <div class="avatar" id="adminAvatar">A</div>
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-weight: 600; font-size: 14px;" id="adminName">مدير النظام</span>
-                        <span style="font-size: 12px; color: var(--text-muted);">Admin</span>
-                    </div>
+            <div class="user-profile">
+                <div class="avatar" id="adminAvatar">A</div>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-weight: 600; font-size: 14px;" id="adminName">مدير المتجر</span>
                 </div>
             </div>
         </header>
 
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value" id="totalUsers">0</div>
-                        <div class="stat-label">إجمالي المستخدمين</div>
-                    </div>
-                    <div class="stat-icon bg-purple"><i class="fas fa-users"></i></div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value" id="totalOrders">0</div>
-                        <div class="stat-label">إجمالي الطلبات</div>
-                    </div>
-                    <div class="stat-icon bg-gold"><i class="fas fa-shopping-cart"></i></div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value" id="totalRevenue">0$</div>
-                        <div class="stat-label">إجمالي المعاملات</div>
-                    </div>
-                    <div class="stat-icon bg-green"><i class="fas fa-dollar-sign"></i></div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value" id="pendingOrders">0</div>
-                        <div class="stat-label">طلبات قيد المعالجة</div>
-                    </div>
-                    <div class="stat-icon bg-red"><i class="fas fa-clock"></i></div>
-                </div>
-            </div>
-        </section>
-
-        <div class="data-card">
+        <!-- قسم المستخدمين -->
+        <div id="usersSection" class="data-card">
             <div class="card-header">
-                <div class="card-title">أحدث الطلبات</div>
+                <div class="card-title">قائمة المستخدمين</div>
             </div>
-            <div id="ordersTableContainer">
-                <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري جلب البيانات من Firebase...</div>
+            <div id="usersTableContainer">
+                <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل المستخدمين...</div>
             </div>
         </div>
     </main>
 
-    <!-- Firebase SDKs (الإصدار 9 Modular) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <!-- نافذة شحن الرصيد -->
+    <div class="modal-overlay" id="balanceModal">
+        <div class="modal-box">
+            <h3 class="modal-title">شحن رصيد المستخدم (Wallet)</h3>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">المستخدم: <span id="modalUserName" style="color: var(--text-main); font-weight: bold;"></span></p>
+            <div class="form-group">
+                <label class="form-label">المبلغ المطلوب إضافته ($)</label>
+                <input type="number" class="form-input" id="amountToAdd" placeholder="مثال: 50" min="1" step="0.01">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-close" onclick="closeModal()">إلغاء</button>
+                <button class="btn btn-success" onclick="confirmAddBalance()">تأكيد الشحن</button>
+            </div>
+        </div>
+    </div>
 
-        // ========= إعدادات Firebase الخاصة بمشروعك =========
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
             authDomain: "ibnalarabstore.firebaseapp.com",
@@ -188,118 +147,127 @@
             measurementId: "G-58BRLWTPDY"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ========= التحقق من تسجيل الدخول وصلاحيات الأدمن =========
+        let currentUserIdToCharge = null;
+
+        // التحقق من الأدمن
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // محاولة جلب بيانات المستخدم للتأكد من صلاحياته
                 try {
-                    // بناءً على قواعد الأمان، إذا لم يكن أدمن سيتم رفض الطلب
-                    const usersSnapshot = await getDocs(collection(db, "users"));
+                    // محاولة جلب المستخدمين للتأكد من صلاحية الأدمن (بناء على قواعد الأمان)
+                    await getDocs(collection(db, "users"));
+                    document.getElementById("adminName").innerText = user.email || "مدير";
+                    document.getElementById("adminAvatar").innerText = (user.email || "A").charAt(0).toUpperCase();
                     
-                    // إذا نجح الطلب، فهو أدمن
-                    document.getElementById("adminName").innerText = user.email;
-                    document.getElementById("adminAvatar").innerText = user.email.charAt(0).toUpperCase();
-                    
-                    loadDashboardData();
+                    loadUsers();
                 } catch (error) {
-                    console.error("Permission Denied: أنت لست أدمن", error);
                     alert("ليس لديك صلاحية للوصول إلى لوحة التحكم.");
-                    window.location.href = "index.html"; // redirect للصفحة الرئيسية
+                    window.location.href = "index.html"; // تعديل لاسم صفحتك الرئيسية
                 }
             } else {
-                window.location.href = "login.html"; // redirect لتسجيل الدخول (عدّل الرابط حسب اسم ملف تسجيل الدخول لديك)
+                // يجب تعديل هذا الرابط لصفحة تسجيل الدخول الخاصة بك
+                window.location.href = "index.html"; 
             }
         });
 
-        // ========= جلب بيانات لوحة التحكم =========
-        async function loadDashboardData() {
+        // جلب المستخدمين وعرضهم
+        async function loadUsers() {
+            const container = document.getElementById("usersTableContainer");
             try {
-                // 1. جلب عدد المستخدمين
-                const usersSnapshot = await getDocs(collection(db, "users"));
-                document.getElementById("totalUsers").innerText = usersSnapshot.size;
-
-                // 2. جلب الطلبات
-                const ordersSnapshot = await getDocs(collection(db, "orders"));
-                document.getElementById("totalOrders").innerText = ordersSnapshot.size;
-
-                let pendingCount = 0;
-                ordersSnapshot.forEach(doc => {
-                    if(doc.data().status === 'pending') pendingCount++;
-                });
-                document.getElementById("pendingOrders").innerText = pendingCount;
-
-                // 3. جلب المعاملات المالية
-                const transactionsSnapshot = await getDocs(collection(db, "transactions"));
-                let totalRevenue = 0;
-                transactionsSnapshot.forEach(doc => {
-                    totalRevenue += doc.data().amount || 0; // تأكد أن الحقل اسمه amount في قاعدة بياناتك
-                });
-                document.getElementById("totalRevenue").innerText = totalRevenue + "$";
-
-                // 4. عرض أحدث 5 طلبات في الجدول
-                renderOrdersTable(ordersSnapshot);
-
+                const snapshot = await getDocs(collection(db, "users"));
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الهاتف</th>
+                                <th>Yaahlan ID</th>
+                                <th>الرصيد (Wallet)</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                if (snapshot.empty) {
+                    tableHTML += `<tr><td colspan="5" style="text-align:center;">لا يوجد مستخدمون مسجلون بعد.</td></tr>`;
+                } else {
+                    snapshot.forEach(d => {
+                        const userData = d.data();
+                        const name = userData.name || 'بدون اسم';
+                        const phone = userData.phone || 'غير متوفر';
+                        const yaahlanId = userData.yaahlanId || 'غير متوفر';
+                        const wallet = userData.wallet || 0;
+                        
+                        // تخزين الاسم والـ ID في خصائص الزر لسهولة الوصول إليها
+                        tableHTML += `
+                            <tr>
+                                <td>${name}</td>
+                                <td>${phone}</td>
+                                <td>${yaahlanId}</td>
+                                <td style="color: var(--success); font-weight: bold;">$${wallet}</td>
+                                <td>
+                                    <button class="btn btn-success" onclick="openBalanceModal('${d.id}', \`${name}\`)">
+                                        <i class="fas fa-plus"></i> شحن الرصيد
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                tableHTML += `</tbody></table>`;
+                container.innerHTML = tableHTML;
             } catch (error) {
-                console.error("خطأ في جلب البيانات:", error);
+                container.innerHTML = `<p style="color: var(--danger);">حدث خطأ أثناء جلب البيانات: ${error.message}</p>`;
             }
         }
 
-        // ========= عرض الطلبات في الجدول =========
-        function renderOrdersTable(ordersSnapshot) {
-            const container = document.getElementById("ordersTableContainer");
-            
-            let tableHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>رقم الطلب</th>
-                            <th>معرف المستخدم</th>
-                            <th>المبلغ</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+        // فتح نافذة شحن الرصيد
+        window.openBalanceModal = (userId, userName) => {
+            currentUserIdToCharge = userId;
+            document.getElementById("modalUserName").innerText = userName;
+            document.getElementById("amountToAdd").value = '';
+            document.getElementById("balanceModal").classList.add('active');
+        };
 
-            let count = 0;
-            ordersSnapshot.forEach(doc => {
-                if(count < 5) { // عرض أول 5 طلبات فقط
-                    const order = doc.data();
-                    // تحديد حالة الطلب والنص (يمكنك تعديل الحقول حسب ما هو موجود في قاعدة بياناتك)
-                    const statusClass = order.status === 'pending' ? 'status-pending' : 'status-completed';
-                    const statusText = order.status === 'pending' ? 'قيد المعالجة' : 'مكتمل';
-                    
-                    tableHTML += `
-                        <tr>
-                            <td>#${doc.id.substring(0, 8)}</td>
-                            <td>${order.userId || 'غير معروف'}</td>
-                            <td>${order.amount || 0}$</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        </tr>
-                    `;
-                    count++;
-                }
-            });
+        window.closeModal = () => {
+            document.getElementById("balanceModal").classList.remove('active');
+        };
 
-            tableHTML += `</tbody></table>`;
-            container.innerHTML = tableHTML;
-        }
+        // تأكيد شحن الرصيد وتحديث Firebase
+        window.confirmAddBalance = async () => {
+            const amount = parseFloat(document.getElementById("amountToAdd").value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("الرجاء إدخال مبلغ صحيح.");
+                return;
+            }
 
-        // ========= أزرار التحكم =========
+            try {
+                const userRef = doc(db, "users", currentUserIdToCharge);
+                // استخدام increment لإضافة المبلغ إلى حقل wallet بأمان تام
+                await updateDoc(userRef, {
+                    wallet: increment(amount)
+                });
+                
+                alert("تم شحن الرصيد بنجاح للمستخدم!");
+                closeModal();
+                loadUsers(); // إعادة تحميل الجدول لعرض الرصيد الجديد
+            } catch (error) {
+                console.error("Error adding balance: ", error);
+                alert("حدث خطأ أثناء شحن الرصيد: " + error.message);
+            }
+        };
+
+        // أزرار التحكم
         document.getElementById('toggleBtn').addEventListener('click', () => {
             document.getElementById('sidebar').classList.toggle('collapsed');
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
+            signOut(auth).then(() => window.location.href = "index.html");
         });
     </script>
 </body>
