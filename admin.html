@@ -14,7 +14,7 @@
             --bg-main: #0f172a; --bg-card: #1e293b; --bg-sidebar: #111827;
             --text-main: #f1f5f9; --text-muted: #94a3b8;
             --accent-color: #6366f1; --accent-gold: #f59e0b;
-            --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+            --success: #10b981; --danger: #ef5350; --warning: #ffa726;
             --border-color: #334155; --transition: all 0.3s ease;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
@@ -63,17 +63,20 @@
         .search-box input { background: none; border: none; outline: none; color: var(--text-main); width: 100%; font-family: 'Tajawal'; font-size: 14px; }
         .filter-select { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 0 16px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 14px; cursor: pointer; }
 
-        /* الجداول */
-        .data-card { background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
+        /* الجداول والبطاقات */
+        .data-card { background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title { font-size: 16px; font-weight: 700; }
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         th { text-align: right; padding: 12px 16px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border-color); font-size: 13px; white-space: nowrap; }
         td { text-align: right; padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 13px; white-space: nowrap; }
         tr:last-child td { border-bottom: none; }
         
-        .btn { padding: 6px 10px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal'; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; font-size: 12px; margin: 0 2px; }
+        .btn { padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Tajawal'; font-weight: 600; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; font-size: 13px; margin: 0 2px; }
         .btn-view { background: rgba(99, 102, 241, 0.1); color: var(--accent-color); border: 1px solid rgba(99, 102, 241, 0.3); }
         .btn-charge { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .btn-save { background: linear-gradient(135deg, var(--accent-color), #818cf8); color: white; padding: 10px 20px; font-size: 14px; }
         .btn-block { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .btn-unblock { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
         .btn-close { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; font-size: 14px; }
@@ -100,7 +103,14 @@
         .info-item span { font-weight: 600; font-size: 14px; word-break: break-all; }
         .history-list { margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px; }
         .history-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-        .history-item:last-child { border-bottom: none; }
+
+        /* إعدادات الباقات */
+        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .setting-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
+        .setting-card h3 { font-size: 16px; margin-bottom: 16px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .form-row { margin-bottom: 12px; }
+        .form-row label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .form-row input { width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 14px; }
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(100%); z-index: 110; }
@@ -120,7 +130,8 @@
             <div class="logo-icon"><i class="fas fa-store"></i></div>
             <div class="logo-text">ابن العرب</div>
         </div>
-        <div class="nav-item active"><i class="fas fa-users"></i><span class="nav-text">إدارة المستخدمين</span></div>
+        <div class="nav-item active" onclick="switchTab('users')"><i class="fas fa-users"></i><span class="nav-text">إدارة المستخدمين</span></div>
+        <div class="nav-item" onclick="switchTab('pricing')"><i class="fas fa-tags"></i><span class="nav-text">أسعار الباقات</span></div>
         <div class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span class="nav-text">تسجيل الخروج</span></div>
     </aside>
 
@@ -128,7 +139,7 @@
         <header class="topbar">
             <div class="topbar-left">
                 <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title">إدارة المستخدمين والمحافظ</h1>
+                <h1 class="page-title" id="pageTitle">إدارة المستخدمين والمحافظ</h1>
             </div>
             <div class="user-profile">
                 <div class="avatar" id="adminAvatar">A</div>
@@ -138,42 +149,55 @@
             </div>
         </header>
 
-        <!-- بطاقات الإحصائيات -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon bg-purple"><i class="fas fa-users"></i></div>
-                <div>
-                    <div class="stat-value" id="totalUsersCount">0</div>
-                    <div class="stat-label">إجمالي المستخدمين</div>
+        <!-- قسم المستخدمين -->
+        <div id="usersSection">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple"><i class="fas fa-users"></i></div>
+                    <div>
+                        <div class="stat-value" id="totalUsersCount">0</div>
+                        <div class="stat-label">إجمالي المستخدمين</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-green"><i class="fas fa-dollar-sign"></i></div>
+                    <div>
+                        <div class="stat-value" id="totalChargedAmount">0$</div>
+                        <div class="stat-label">مجموع الشحنات</div>
+                    </div>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-green"><i class="fas fa-dollar-sign"></i></div>
-                <div>
-                    <div class="stat-value" id="totalChargedAmount">0$</div>
-                    <div class="stat-label">مجموع الشحنات</div>
+
+            <div class="toolbar">
+                <div class="search-box">
+                    <i class="fas fa-search" style="color: var(--text-muted); font-size: 14px;"></i>
+                    <input type="text" id="searchInput" placeholder="ابحث بالاسم، الإيميل، الهاتف أو ID..." oninput="renderUsers()">
+                </div>
+                <select class="filter-select" id="filterSelect" onchange="renderUsers()">
+                    <option value="all">كل المستخدمين</option>
+                    <option value="active">المستخدمون النشطون</option>
+                    <option value="blocked">المحظورون</option>
+                </select>
+            </div>
+
+            <div class="data-card">
+                <div class="table-responsive">
+                    <div id="usersTableContainer">
+                        <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- شريط البحث -->
-        <div class="toolbar">
-            <div class="search-box">
-                <i class="fas fa-search" style="color: var(--text-muted); font-size: 14px;"></i>
-                <input type="text" id="searchInput" placeholder="ابحث بالاسم، الإيميل، الهاتف أو ID..." oninput="renderUsers()">
-            </div>
-            <select class="filter-select" id="filterSelect" onchange="renderUsers()">
-                <option value="all">كل المستخدمين</option>
-                <option value="active">المستخدمون النشطون</option>
-                <option value="blocked">المحظورون</option>
-            </select>
-        </div>
-
-        <!-- جدول المستخدمين -->
-        <div class="data-card">
-            <div class="table-responsive">
-                <div id="usersTableContainer">
-                    <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</div>
+        <!-- قسم إعدادات الباقات -->
+        <div id="pricingSection" style="display: none;">
+            <div class="data-card">
+                <div class="card-header">
+                    <div class="card-title">تعديل باقات الشحن والأسعار</div>
+                    <button class="btn btn-save" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ التغييرات</button>
+                </div>
+                <div class="settings-grid" id="pricingSettingsGrid">
+                    <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الإعدادات...</div>
                 </div>
             </div>
         </div>
@@ -207,12 +231,10 @@
                 <div class="info-item"><label>الرصيد الحالي</label><span id="d_wallet" style="color: var(--success);">-</span></div>
                 <div class="info-item"><label>تاريخ الإنشاء</label><span id="d_createdAt">-</span></div>
             </div>
-            
             <h4 style="font-size: 14px; margin: 20px 0 10px; color: var(--text-muted);">سجل عمليات الشحن</h4>
             <div class="history-list" id="userHistoryList">
                 <div class="loader" style="padding: 10px; font-size: 12px;">جاري جلب السجل...</div>
             </div>
-            
             <div class="modal-actions">
                 <button class="btn btn-close" onclick="closeModal('detailsModal')">إغلاق</button>
             </div>
@@ -222,7 +244,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
@@ -241,6 +263,17 @@
         let allUsers = [];
         let allTransactions = [];
         let currentUserIdToCharge = null;
+        let appSettings = null;
+
+        // الإعدادات الافتراضية
+        const defaultSettings = {
+            tiers: {
+                1: { rate: 2 / 1000, min: 1000, max: 25999, name: 'الباقة الأولى', nameEn: 'Tier 1', basePrice: 2, baseAmount: 1000 },
+                2: { rate: 50 / 26000, min: 26000, max: 52999, name: 'الباقة الثانية', nameEn: 'Tier 2', basePrice: 50, baseAmount: 26000 },
+                3: { rate: 100 / 53000, min: 53000, max: Infinity, name: 'الباقة الثالثة', nameEn: 'Tier 3', basePrice: 100, baseAmount: 53000 }
+            },
+            walletMinTopup: 2
+        };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -249,6 +282,7 @@
                     document.getElementById("adminName").innerText = user.email || "مدير";
                     document.getElementById("adminAvatar").innerText = (user.email || "A").charAt(0).toUpperCase();
                     await loadData();
+                    await loadSettings();
                 } catch (error) {
                     alert("ليس لديك صلاحية للوصول إلى لوحة التحكم.");
                     window.location.href = "index.html";
@@ -260,12 +294,10 @@
 
         async function loadData() {
             try {
-                // جلب المستخدمين
                 const usersSnap = await getDocs(collection(db, "users"));
                 allUsers = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 document.getElementById("totalUsersCount").innerText = allUsers.length;
 
-                // جلب المعاملات (سجل الشحن)
                 const transSnap = await getDocs(collection(db, "transactions"));
                 allTransactions = transSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 
@@ -279,17 +311,121 @@
             }
         }
 
+        // ===== إعدادات الباقات =====
+        async function loadSettings() {
+            const container = document.getElementById('pricingSettingsGrid');
+            try {
+                const docRef = doc(db, "settings", "pricing");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    appSettings = docSnap.data();
+                } else {
+                    appSettings = defaultSettings;
+                }
+                
+                let html = '';
+                for (let i = 1; i <= 3; i++) {
+                    const t = appSettings.tiers[i];
+                    const maxVal = t.max === Infinity ? '' : t.max;
+                    html += `
+                        <div class="setting-card">
+                            <h3>الباقة ${i}</h3>
+                            <div class="form-row">
+                                <label>الاسم (عربي)</label>
+                                <input type="text" id="tier_${i}_name" value="${t.name}">
+                            </div>
+                            <div class="form-row">
+                                <label>الاسم (إنجليزي)</label>
+                                <input type="text" id="tier_${i}_nameEn" value="${t.nameEn}">
+                            </div>
+                            <div class="form-row">
+                                <label>السعر الأساسي ($)</label>
+                                <input type="number" id="tier_${i}_basePrice" value="${t.basePrice}" step="0.01">
+                            </div>
+                            <div class="form-row">
+                                <label>عدد الماسات الأساسي</label>
+                                <input type="number" id="tier_${i}_baseAmount" value="${t.baseAmount}">
+                            </div>
+                            <div class="form-row">
+                                <label>الحد الأدنى للماسات</label>
+                                <input type="number" id="tier_${i}_min" value="${t.min}">
+                            </div>
+                            <div class="form-row">
+                                <label>الحد الأقصى للماسات (اتركه فارغاً بدون حد)</label>
+                                <input type="number" id="tier_${i}_max" value="${maxVal}">
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                html += `
+                    <div class="setting-card" style="grid-column: span 2;">
+                        <h3>إعدادات المحفظة</h3>
+                        <div class="form-row">
+                            <label>الحد الأدنى لشحن المحفظة ($)</label>
+                            <input type="number" id="wallet_minTopup" value="${appSettings.walletMinTopup}" step="0.01">
+                        </div>
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<p style="color: var(--danger);">خطأ في تحميل الإعدادات.</p>`;
+            }
+        }
+
+        window.saveSettings = async () => {
+            try {
+                const newSettings = { tiers: {}, walletMinTopup: parseFloat(document.getElementById('wallet_minTopup').value) || 2 };
+                
+                for (let i = 1; i <= 3; i++) {
+                    const basePrice = parseFloat(document.getElementById(`tier_${i}_basePrice`).value) || 0;
+                    const baseAmount = parseInt(document.getElementById(`tier_${i}_baseAmount`).value) || 1;
+                    const maxVal = document.getElementById(`tier_${i}_max`).value;
+                    
+                    newSettings.tiers[i] = {
+                        name: document.getElementById(`tier_${i}_name`).value,
+                        nameEn: document.getElementById(`tier_${i}_nameEn`).value,
+                        basePrice: basePrice,
+                        baseAmount: baseAmount,
+                        min: parseInt(document.getElementById(`tier_${i}_min`).value) || 0,
+                        max: maxVal === '' ? Infinity : parseInt(maxVal),
+                        rate: basePrice / baseAmount // حساب السعر النسبي تلقائياً
+                    };
+                }
+
+                await setDoc(doc(db, "settings", "pricing"), newSettings);
+                alert("تم حفظ الإعدادات بنجاح! سيتم تحديث الأسعار في المتجر فوراً.");
+            } catch (error) {
+                alert("حدث خطأ أثناء الحفظ: " + error.message);
+            }
+        };
+
+        window.switchTab = (tab) => {
+            if(tab === 'users') {
+                document.getElementById('usersSection').style.display = 'block';
+                document.getElementById('pricingSection').style.display = 'none';
+                document.getElementById('pageTitle').innerText = 'إدارة المستخدمين والمحافظ';
+                document.querySelectorAll('.nav-item')[0].classList.add('active');
+                document.querySelectorAll('.nav-item')[1].classList.remove('active');
+            } else {
+                document.getElementById('usersSection').style.display = 'none';
+                document.getElementById('pricingSection').style.display = 'block';
+                document.getElementById('pageTitle').innerText = 'إعدادات أسعار الباقات';
+                document.querySelectorAll('.nav-item')[0].classList.remove('active');
+                document.querySelectorAll('.nav-item')[1].classList.add('active');
+            }
+        };
+
         window.renderUsers = () => {
             const container = document.getElementById("usersTableContainer");
             const searchText = document.getElementById('searchInput').value.toLowerCase();
             const filterVal = document.getElementById('filterSelect').value;
 
             let filteredUsers = allUsers.filter(u => {
-                // الفلترة
                 if (filterVal === 'active' && u.isBlocked) return false;
                 if (filterVal === 'blocked' && !u.isBlocked) return false;
 
-                // البحث
                 const name = (u.name || '').toLowerCase();
                 const email = (u.email || '').toLowerCase();
                 const phone = (u.phone || '').toLowerCase();
@@ -359,12 +495,10 @@
             if (!user) return;
 
             try {
-                // 1. تحديث رصيد المستخدم
                 await updateDoc(doc(db, "users", currentUserIdToCharge), {
                     wallet: increment(amount)
                 });
 
-                // 2. إضافة سجل الشحن لمجموعة transactions
                 await addDoc(collection(db, "transactions"), {
                     userId: currentUserIdToCharge,
                     userName: user.name || 'غير معروف',
@@ -375,7 +509,7 @@
 
                 alert("تم الشحن بنجاح وإضافة السجل!");
                 closeModal('balanceModal');
-                await loadData(); // إعادة تحميل البيانات
+                await loadData();
             } catch (error) {
                 alert("خطأ: " + error.message);
             }
@@ -407,7 +541,6 @@
             }
             document.getElementById("d_createdAt").innerText = dateStr;
 
-            // جلب سجل المعاملات لهذا المستخدم
             const userTrans = allTransactions.filter(t => t.userId === userId);
             const historyList = document.getElementById("userHistoryList");
             
