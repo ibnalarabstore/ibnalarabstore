@@ -3,336 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم العالمية | Global Dashboard</title>
+    <title>لوحة تحكم الأدمن | ابن العرب</title>
     
-    <!-- خطوط جوجل الفخمة -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    
-    <!-- أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- مكتبة الرسوم البيانية Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --bg-main: #0f172a; /* خلفية رئيسية داكنة */
-            --bg-card: #1e293b; /* خلفية البطاقات */
-            --bg-sidebar: #111827; /* خلفية القائمة */
-            --text-main: #f1f5f9; /* النص الأساسي */
-            --text-muted: #94a3b8; /* النص الثانوي */
-            --accent-color: #6366f1; /* اللون المميز (بنفسجي) */
-            --accent-gold: #f59e0b; /* لمسة ذهبية للفخامة */
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-sidebar: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent-color: #6366f1;
+            --accent-gold: #f59e0b;
             --success: #10b981;
             --danger: #ef4444;
             --border-color: #334155;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        /* القائمة الجانبية */
+        .sidebar { width: 260px; background: var(--bg-sidebar); padding: 24px 16px; display: flex; flex-direction: column; border-left: 1px solid var(--border-color); transition: var(--transition); position: fixed; height: 100vh; z-index: 100; }
+        .sidebar.collapsed { width: 80px; }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; padding: 0 12px 24px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; flex-shrink: 0; }
+        .logo-text { font-size: 20px; font-weight: 800; white-space: nowrap; }
+        .sidebar.collapsed .logo-text, .sidebar.collapsed .nav-text { opacity: 0; width: 0; display: none; }
+        .nav-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: var(--transition); margin-bottom: 8px; text-decoration: none; }
+        .nav-item:hover, .nav-item.active { background: rgba(99, 102, 241, 0.1); color: var(--text-main); }
+        .nav-item.active { border-right: 3px solid var(--accent-color); }
+        .nav-item i { font-size: 18px; width: 24px; text-align: center; }
+        .nav-text { font-size: 15px; font-weight: 500; }
+        .logout-btn { margin-top: auto; color: var(--danger) !important; }
 
-        /* --- تصميم القائمة الجانبية --- */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-sidebar);
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--border-color);
-            transition: var(--transition);
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .sidebar.collapsed {
-            width: 80px;
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 12px 24px 12px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 24px;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-gold));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 800;
-            white-space: nowrap;
-            transition: var(--transition);
-        }
-
-        .sidebar.collapsed .logo-text,
-        .sidebar.collapsed .nav-text {
-            opacity: 0;
-            width: 0;
-            display: none;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 16px;
-            border-radius: 12px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 8px;
-            text-decoration: none;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--text-main);
-        }
-
-        .nav-item.active {
-            border-right: 3px solid var(--accent-color);
-        }
-
-        .nav-item i {
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .nav-text {
-            font-size: 15px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        /* --- المحتوى الرئيسي --- */
-        .main-content {
-            flex: 1;
-            margin-right: 260px; /* تعويض عرض القائمة */
-            padding: 32px;
-            transition: var(--transition);
-            width: calc(100% - 260px);
-        }
-
-        .sidebar.collapsed ~ .main-content {
-            margin-right: 80px;
-            width: calc(100% - 80px);
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            background: var(--bg-card);
-            padding: 16px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+        /* المحتوى */
+        .main-content { flex: 1; margin-right: 260px; padding: 32px; transition: var(--transition); width: calc(100% - 260px); }
+        .sidebar.collapsed ~ .main-content { margin-right: 80px; width: calc(100% - 80px); }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; background: var(--bg-card); padding: 16px 24px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .toggle-btn { background: none; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
         .toggle-btn:hover { color: var(--accent-color); }
+        .page-title { font-size: 22px; font-weight: 700; }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
 
-        .page-title {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .search-box {
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .search-box input {
-            background: none;
-            border: none;
-            outline: none;
-            color: var(--text-main);
-            font-family: 'Tajawal';
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: url('https://i.pravatar.cc/100') center/cover;
-            border: 2px solid var(--accent-color);
-        }
-
-        /* --- الشبكة والبطاقات --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%);
-            transform: translate(30%, -30%);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
+        /* البطاقات */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .stat-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); transition: var(--transition); position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(0,0,0,0) 70%); transform: translate(30%, -30%); }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2); }
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .bg-purple { background: rgba(99, 102, 241, 0.1); color: var(--accent-color); }
         .bg-gold { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); }
         .bg-green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .bg-red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .stat-value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+        .stat-label { color: var(--text-muted); font-size: 14px; }
 
-        .stat-value {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
+        /* الجداول */
+        .data-card { background: var(--bg-card); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 32px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .card-title { font-size: 18px; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: right; padding: 12px 16px; color: var(--text-muted); font-weight: 500; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        td { text-align: right; padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        tr:last-child td { border-bottom: none; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--accent-gold); }
+        .status-completed { background: rgba(16, 185, 129, 0.1); color: var(--success); }
 
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .stat-trend {
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .trend-up { color: var(--success); }
-        .trend-down { color: var(--danger); }
-
-        /* --- الرسوم البيانية --- */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .chart-card {
-            background: var(--bg-card);
-            padding: 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .chart-title {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        /* التجاوب مع الشاشات الصغيرة */
+        .loader { text-align: center; padding: 40px; color: var(--text-muted); }
+        
         @media (max-width: 992px) {
-            .charts-grid { grid-template-columns: 1fr; }
             .sidebar { transform: translateX(100%); }
             .main-content { margin-right: 0; width: 100%; }
             .sidebar.active { transform: translateX(0); }
@@ -341,211 +91,215 @@
 </head>
 <body>
 
-    <!-- القائمة الجانبية -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo-icon"><i class="fas fa-globe"></i></div>
-            <div class="logo-text">Global Dash</div>
+            <div class="logo-text">ابن العرب</div>
         </div>
-        
-        <a class="nav-item active">
-            <i class="fas fa-chart-pie"></i>
-            <span class="nav-text">نظرة عامة</span>
-        </a>
-        <a class="nav-item">
-            <i class="fas fa-users"></i>
-            <span class="nav-text">المستخدمين</span>
-        </a>
-        <a class="nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span class="nav-text">التحليلات</span>
-        </a>
-        <a class="nav-item">
-            <i class="fas fa-shopping-bag"></i>
-            <span class="nav-text">المبيعات</span>
-        </a>
-        <a class="nav-item">
-            <i class="fas fa-cog"></i>
-            <span class="nav-text">الإعدادات</span>
-        </a>
+        <a class="nav-item active"><i class="fas fa-chart-pie"></i><span class="nav-text">نظرة عامة</span></a>
+        <a class="nav-item"><i class="fas fa-users"></i><span class="nav-text">المستخدمين</span></a>
+        <a class="nav-item"><i class="fas fa-shopping-bag"></i><span class="nav-text">الطلبات</span></a>
+        <a class="nav-item"><i class="fas fa-wallet"></i><span class="nav-text">المعاملات</span></a>
+        <a class="nav-item"><i class="fas fa-cog"></i><span class="nav-text">الإعدادات والأسعار</span></a>
+        <a class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span class="nav-text">تسجيل الخروج</span></a>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <main class="main-content">
-        <!-- الشريط العلوي -->
         <header class="topbar">
             <div class="topbar-left">
                 <button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
-                <h1 class="page-title">لوحة التحكم العالمية</h1>
+                <h1 class="page-title">لوحة تحكم الإدارة</h1>
             </div>
             <div class="topbar-right">
-                <div class="search-box">
-                    <i class="fas fa-search" style="color: var(--text-muted); font-size: 14px;"></i>
-                    <input type="text" placeholder="ابحث عن شيء ما...">
-                </div>
                 <div class="user-profile">
-                    <div class="avatar"></div>
+                    <div class="avatar" id="adminAvatar">A</div>
                     <div style="display: flex; flex-direction: column;">
-                        <span style="font-weight: 600; font-size: 14px;">مدير النظام</span>
-                        <span style="font-size: 12px; color: var(--text-muted);">مرحباً بعودتك</span>
+                        <span style="font-weight: 600; font-size: 14px;" id="adminName">مدير النظام</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">Admin</span>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- بطاقات الإحصائيات -->
         <section class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
                     <div>
-                        <div class="stat-value">$8,450</div>
-                        <div class="stat-label">إجمالي الإيرادات</div>
-                    </div>
-                    <div class="stat-icon bg-green"><i class="fas fa-dollar-sign"></i></div>
-                </div>
-                <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 12.5% عن الشهر الماضي</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div>
-                        <div class="stat-value">14,250</div>
-                        <div class="stat-label">المستخدمين النشطين</div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">إجمالي المستخدمين</div>
                     </div>
                     <div class="stat-icon bg-purple"><i class="fas fa-users"></i></div>
                 </div>
-                <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 8.2% هذا الأسبوع</div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-header">
                     <div>
-                        <div class="stat-value">1,320</div>
-                        <div class="stat-label">الطلبات الجديدة</div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">إجمالي الطلبات</div>
                     </div>
                     <div class="stat-icon bg-gold"><i class="fas fa-shopping-cart"></i></div>
                 </div>
-                <div class="stat-trend trend-down"><i class="fas fa-arrow-down"></i> 3.1% انخفاض بسيط</div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-header">
                     <div>
-                        <div class="stat-value">98.5%</div>
-                        <div class="stat-label">معدل الرضا</div>
+                        <div class="stat-value" id="totalRevenue">0$</div>
+                        <div class="stat-label">إجمالي المعاملات</div>
                     </div>
-                    <div class="stat-icon bg-red"><i class="fas fa-heart"></i></div>
+                    <div class="stat-icon bg-green"><i class="fas fa-dollar-sign"></i></div>
                 </div>
-                <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> 1.5% تحسن مستمر</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="pendingOrders">0</div>
+                        <div class="stat-label">طلبات قيد المعالجة</div>
+                    </div>
+                    <div class="stat-icon bg-red"><i class="fas fa-clock"></i></div>
+                </div>
             </div>
         </section>
 
-        <!-- قسم الرسوم البيانية -->
-        <section class="charts-grid">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div class="chart-title">تحليل الإيرادات العالمية</div>
-                    <select style="background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; outline: none;">
-                        <option>هذا العام</option>
-                        <option>الشهر الماضي</option>
-                    </select>
-                </div>
-                <div class="chart-container">
-                    <canvas id="revenueChart"></canvas>
-                </div>
+        <div class="data-card">
+            <div class="card-header">
+                <div class="card-title">أحدث الطلبات</div>
             </div>
-
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div class="chart-title">مصادر الزيارات</div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="trafficChart"></canvas>
-                </div>
+            <div id="ordersTableContainer">
+                <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري جلب البيانات من Firebase...</div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <script>
-        // تشغيل/إيقاف القائمة الجانبية
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
-        
-        toggleBtn.addEventListener('click', () => {
-            if (window.innerWidth <= 992) {
-                sidebar.classList.toggle('active'); // للجوال
+    <!-- Firebase SDKs (الإصدار 9 Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ========= إعدادات Firebase الخاصة بمشروعك =========
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
+            authDomain: "ibnalarabstore.firebaseapp.com",
+            projectId: "ibnalarabstore",
+            storageBucket: "ibnalarabstore.firebasestorage.app",
+            messagingSenderId: "805953255088",
+            appId: "1:805953255088:web:19e1cfaeb51bed5e9d6d75",
+            measurementId: "G-58BRLWTPDY"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ========= التحقق من تسجيل الدخول وصلاحيات الأدمن =========
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // محاولة جلب بيانات المستخدم للتأكد من صلاحياته
+                try {
+                    // بناءً على قواعد الأمان، إذا لم يكن أدمن سيتم رفض الطلب
+                    const usersSnapshot = await getDocs(collection(db, "users"));
+                    
+                    // إذا نجح الطلب، فهو أدمن
+                    document.getElementById("adminName").innerText = user.email;
+                    document.getElementById("adminAvatar").innerText = user.email.charAt(0).toUpperCase();
+                    
+                    loadDashboardData();
+                } catch (error) {
+                    console.error("Permission Denied: أنت لست أدمن", error);
+                    alert("ليس لديك صلاحية للوصول إلى لوحة التحكم.");
+                    window.location.href = "index.html"; // redirect للصفحة الرئيسية
+                }
             } else {
-                sidebar.classList.toggle('collapsed'); // للكمبيوتر
+                window.location.href = "login.html"; // redirect لتسجيل الدخول (عدّل الرابط حسب اسم ملف تسجيل الدخول لديك)
             }
         });
 
-        // إعدادات الرسوم البيانية Chart.js
-        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-        const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+        // ========= جلب بيانات لوحة التحكم =========
+        async function loadDashboardData() {
+            try {
+                // 1. جلب عدد المستخدمين
+                const usersSnapshot = await getDocs(collection(db, "users"));
+                document.getElementById("totalUsers").innerText = usersSnapshot.size;
 
-        // إعدادات عامة للألوان والخطوط
-        Chart.defaults.color = '#94a3b8';
-        Chart.defaults.font.family = "'Tajawal', sans-serif";
+                // 2. جلب الطلبات
+                const ordersSnapshot = await getDocs(collection(db, "orders"));
+                document.getElementById("totalOrders").innerText = ordersSnapshot.size;
 
-        // رسم بياني خطي (الإيرادات)
-        new Chart(ctxRevenue, {
-            type: 'line',
-            data: {
-                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو'],
-                datasets: [{
-                    label: 'الإيرادات',
-                    data: [3200, 4100, 3800, 5200, 4900, 6100, 8450],
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4, // جعل الخط منحنياً وناعماً
-                    pointBackgroundColor: '#6366f1',
-                    pointRadius: 4,
-                    pointHoverRadius: 7
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(148, 163, 184, 0.1)' }
-                    },
-                    x: {
-                        grid: { display: false }
-                    }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
+                let pendingCount = 0;
+                ordersSnapshot.forEach(doc => {
+                    if(doc.data().status === 'pending') pendingCount++;
+                });
+                document.getElementById("pendingOrders").innerText = pendingCount;
+
+                // 3. جلب المعاملات المالية
+                const transactionsSnapshot = await getDocs(collection(db, "transactions"));
+                let totalRevenue = 0;
+                transactionsSnapshot.forEach(doc => {
+                    totalRevenue += doc.data().amount || 0; // تأكد أن الحقل اسمه amount في قاعدة بياناتك
+                });
+                document.getElementById("totalRevenue").innerText = totalRevenue + "$";
+
+                // 4. عرض أحدث 5 طلبات في الجدول
+                renderOrdersTable(ordersSnapshot);
+
+            } catch (error) {
+                console.error("خطأ في جلب البيانات:", error);
             }
+        }
+
+        // ========= عرض الطلبات في الجدول =========
+        function renderOrdersTable(ordersSnapshot) {
+            const container = document.getElementById("ordersTableContainer");
+            
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>معرف المستخدم</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let count = 0;
+            ordersSnapshot.forEach(doc => {
+                if(count < 5) { // عرض أول 5 طلبات فقط
+                    const order = doc.data();
+                    // تحديد حالة الطلب والنص (يمكنك تعديل الحقول حسب ما هو موجود في قاعدة بياناتك)
+                    const statusClass = order.status === 'pending' ? 'status-pending' : 'status-completed';
+                    const statusText = order.status === 'pending' ? 'قيد المعالجة' : 'مكتمل';
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>#${doc.id.substring(0, 8)}</td>
+                            <td>${order.userId || 'غير معروف'}</td>
+                            <td>${order.amount || 0}$</td>
+                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        </tr>
+                    `;
+                    count++;
+                }
+            });
+
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        // ========= أزرار التحكم =========
+        document.getElementById('toggleBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('collapsed');
         });
 
-        // رسم بياني دائري (مصادر الزيارات)
-        new Chart(ctxTraffic, {
-            type: 'doughnut',
-            data: {
-                labels: ['البحث المباشر', 'وسائل التواصل', 'الإحالات'],
-                datasets: [{
-                    data: [45, 35, 20],
-                    backgroundColor: ['#6366f1', '#f59e0b', '#10b981'],
-                    borderWidth: 0,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%', // لجعله بشكل حلقة أنيقة
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20, usePointStyle: true }
-                    }
-                }
-            }
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
         });
     </script>
 </body>
