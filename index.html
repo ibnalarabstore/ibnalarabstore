@@ -77,6 +77,19 @@
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    [data-theme="light"] {
+      --text-primary: #1a1a2e;
+      --text-secondary: #4a4a6a;
+      --text-muted: #8888a0;
+      --bg-dark: #f5f5fa;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f0f0f5;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --shadow: 0 8px 32px rgba(0,0,0,0.1);
+      --shadow-glow: 0 0 30px rgba(233,69,96,0.1);
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -998,7 +1011,12 @@
           <span class="header-logo-text">IBN<span>AL</span>ARAB<span>STORE</span></span>
         </a>
         <div class="header-actions">
+          <button class="lang-toggle" onclick="toggleTheme()" id="theme-btn" title="تبديل الثيم">🌙</button>
           <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
+          <div class="wallet-balance-header" id="wallet-balance-header" style="display: none; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; background: rgba(233,69,96,0.1); border: 1px solid rgba(233,69,96,0.2); margin-right: 8px;">
+            <span style="font-size: 14px; color: var(--accent);">$</span>
+            <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);" id="header-wallet-amount">0.00</span>
+          </div>
           <button class="btn btn-primary" id="header-login-btn" onclick="openModal('login-modal')" style="padding: 8px 20px; font-size: 13px;">تسجيل الدخول</button>
           <div style="position: relative; display: none;" id="user-menu-container">
             <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">
@@ -1032,8 +1050,8 @@
       <p class="hero-desc">اختر باقتك، أدخل الكمية، واطلب الشحن مباشرة عبر واتساب</p>
     </section>
 
-    <!-- Wallet Banner -->
-    <div class="wallet-banner" id="wallet-banner">
+    <!-- Wallet Banner (hidden, moved to profile) -->
+    <div class="wallet-banner" id="wallet-banner" style="display: none;">
       <div class="wallet-info">
         <div class="wallet-icon">💰</div>
         <div class="wallet-text">
@@ -1041,9 +1059,6 @@
           <span class="wallet-amount" id="wallet-amount">0.00 <span>$</span></span>
         </div>
       </div>
-      <button class="btn btn-outline" onclick="openWalletModal()" style="padding: 10px 20px; font-size: 13px;">
-        💳 شحن المحفظة
-      </button>
     </div>
 
     <!-- Pricing Section -->
@@ -1282,6 +1297,8 @@
         heroTitle: 'شحن الماسات Yaahlan Chat',
         heroSubtitle: 'أسرع وأسهل طريقة لشحن ماسات Yaahlan Chat',
         heroDesc: 'اختر باقتك، أدخل الكمية، واطلب الشحن مباشرة عبر واتساب',
+        splashTitle: 'Yaahlan Chat',
+        splashDesc: 'تطبيق الدردشة والألعاب الصوتية الأكثر متعة',
         walletLabel: 'رصيد محفظتك',
         walletBtn: 'شحن المحفظة',
         pricingTitle: 'باقات الشحن',
@@ -1339,13 +1356,21 @@
         loading: 'جاري التحميل...',
         loggingIn: 'جاري تسجيل الدخول...',
         saving: 'جاري الحفظ...',
-        sendingOrder: 'جاري إرسال الطلب...'
+        sendingOrder: 'جاري إرسال الطلب...',
+        loginModalTitle: 'تسجيل الدخول',
+        loginModalSubtitle: 'سجل دخولك لإتمام طلبات الشحن',
+        headerLoginBtn: 'تسجيل الدخول',
+        profileMenu: 'الملف الشخصي',
+        walletMenu: 'محفظتي',
+        logoutMenu: 'تسجيل الخروج'
       },
       en: {
         title: 'IBNALARABSTORE — Yaahlan Chat Recharge',
         heroTitle: 'Yaahlan Chat Diamonds Recharge',
         heroSubtitle: 'The fastest and easiest way to recharge Yaahlan Chat diamonds',
         heroDesc: 'Choose your package, enter the amount, and order directly via WhatsApp',
+        splashTitle: 'Yaahlan Chat',
+        splashDesc: 'The most fun voice chat and games app',
         walletLabel: 'Wallet Balance',
         walletBtn: 'Top Up Wallet',
         pricingTitle: 'Recharge Packages',
@@ -1403,7 +1428,13 @@
         loading: 'Loading...',
         loggingIn: 'Signing in...',
         saving: 'Saving...',
-        sendingOrder: 'Sending order...'
+        sendingOrder: 'Sending order...',
+        loginModalTitle: 'Sign In',
+        loginModalSubtitle: 'Sign in to complete your recharge orders',
+        headerLoginBtn: 'Sign In',
+        profileMenu: 'Profile',
+        walletMenu: 'My Wallet',
+        logoutMenu: 'Sign Out'
       }
     };
 
@@ -1431,57 +1462,129 @@
       applyTranslations();
     }
 
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      document.getElementById('theme-btn').textContent = newTheme === 'light' ? '☀️' : '🌙';
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+
     function applyTranslations() {
       const t = translations[currentLang];
       document.title = t.title;
 
-      // Update all text content
-      document.querySelector('.hero-title').innerHTML = currentLang === 'ar' ? 
+      // Update hero section
+      const heroTitle = document.querySelector('.hero-title');
+      if (heroTitle) heroTitle.innerHTML = currentLang === 'ar' ? 
         'شحن الماسات <span>Yaahlan Chat</span>' : 
         'Yaahlan Chat <span>Diamonds Recharge</span>';
-      document.querySelector('.hero-subtitle').textContent = t.heroSubtitle;
-      document.querySelector('.hero-desc').textContent = t.heroDesc;
-      document.querySelector('.wallet-label').textContent = t.walletLabel;
-      document.querySelector('.wallet-banner button').textContent = (currentLang === 'ar' ? '💳 ' : '') + t.walletBtn;
-      document.querySelector('.pricing-section .section-title').textContent = t.pricingTitle;
-      document.querySelector('.how-section .section-title').textContent = t.howTitle;
-      document.querySelector('.footer-text').textContent = t.footerText;
-      document.querySelector('.footer-copy').textContent = t.footerCopy;
 
-      // Update tier names
-      document.querySelectorAll('.pricing-tier-name')[0].textContent = t.tier1Name;
-      document.querySelectorAll('.pricing-tier-name')[1].textContent = t.tier2Name;
-      document.querySelectorAll('.pricing-tier-name')[2].textContent = t.tier3Name;
+      const heroSubtitle = document.querySelector('.hero-subtitle');
+      if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
 
-      // Update popular badge
-      document.querySelector('.popular-badge').textContent = t.popularBadge;
+      const heroDesc = document.querySelector('.hero-desc');
+      if (heroDesc) heroDesc.textContent = t.heroDesc;
 
-      // Update step titles and descriptions
-      const stepTitles = document.querySelectorAll('.step-title');
-      const stepDescs = document.querySelectorAll('.step-desc');
-      stepTitles[0].textContent = t.step1Title;
-      stepDescs[0].textContent = t.step1Desc;
-      stepTitles[1].textContent = t.step2Title;
-      stepDescs[1].textContent = t.step2Desc;
-      stepTitles[2].textContent = t.step3Title;
-      stepDescs[2].textContent = t.step3Desc;
+      // Update splash section
+      const splashTitle = document.querySelector('[data-translate="splashTitle"]');
+      if (splashTitle) splashTitle.textContent = t.splashTitle;
 
-      // Update modal texts
-      document.querySelector('#profile-modal .modal-title').textContent = t.profileTitle;
-      document.querySelector('#profile-modal .modal-subtitle').textContent = t.profileSubtitle;
-      document.querySelector('#wallet-modal .modal-title').textContent = t.walletModalTitle;
-      document.querySelector('#wallet-modal .modal-subtitle').textContent = t.walletModalSubtitle;
-      document.querySelector('#order-modal .modal-title').textContent = t.confirmTitle;
-      document.querySelector('#order-modal .modal-subtitle').textContent = t.confirmSubtitle;
+      const splashDesc = document.querySelector('[data-translate="splashDesc"]');
+      if (splashDesc) splashDesc.textContent = t.splashDesc;
 
-      // Update labels
+      // Update wallet section
+      const walletLabel = document.querySelector('.wallet-label');
+      if (walletLabel) walletLabel.textContent = t.walletLabel;
+
+      // Update pricing section
+      const pricingTitle = document.querySelector('.pricing-section .section-title');
+      if (pricingTitle) pricingTitle.textContent = t.pricingTitle;
+
+      const tierNames = document.querySelectorAll('.pricing-tier-name');
+      if (tierNames[0]) tierNames[0].textContent = t.tier1Name;
+      if (tierNames[1]) tierNames[1].textContent = t.tier2Name;
+      if (tierNames[2]) tierNames[2].textContent = t.tier3Name;
+
+      const popularBadge = document.querySelector('.popular-badge');
+      if (popularBadge) popularBadge.textContent = t.popularBadge;
+
+      // Update pricing labels
       document.querySelectorAll('.pricing-input-group label').forEach(el => el.textContent = t.diamondsLabel);
       document.querySelectorAll('.pricing-total-label').forEach(el => el.textContent = t.totalLabel);
       document.querySelectorAll('.pricing-card .btn').forEach(el => el.textContent = t.submitBtn);
 
-      // Update splash
-      document.querySelector('.splash-desc').textContent = t.splashDesc;
-      document.querySelector('#btn-google').innerHTML = '<svg viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.74 0 3.3.6 4.53 1.78l3.4-3.4C17.95 1.18 15.24 0 12 0 7.31 0 3.23 2.7 1.54 6.61l3.96 3.08C6.46 6.8 9.02 5.04 12 5.04z"/><path fill="#34A853" d="M23.5 12.28c0-.86-.08-1.68-.22-2.48H12v4.7h6.45c-.28 1.48-1.1 2.73-2.34 3.57l3.78 2.93c2.2-2.04 3.61-5.04 3.61-8.72z"/><path fill="#FBBC05" d="M5.5 14.69l-3.96 3.08C3.23 21.3 7.31 24 12 24c3.24 0 5.95-1.18 7.93-3.19l-3.78-2.93c-1.06.71-2.42 1.13-4.15 1.13-3.2 0-5.92-2.16-6.89-5.08z"/><path fill="#4285F4" d="M12 5.04c3.2 0 5.92 2.16 6.89 5.08l3.96-3.08C21.23 2.7 17.15 0 12 0c-3.24 0-5.95 1.18-7.93 3.19l3.78 2.93C8.78 5.04 10.26 5.04 12 5.04z"/></svg> ' + t.loginBtn;
+      // Update limits text
+      document.querySelectorAll('.pricing-limits span:first-child').forEach((el, i) => {
+        if (i === 0) el.textContent = t.minLabel + ': 1,000';
+        else if (i === 1) el.textContent = t.minLabel + ': 26,000';
+        else if (i === 2) el.textContent = t.minLabel + ': 53,000';
+      });
+      document.querySelectorAll('.pricing-limits span:last-child').forEach((el, i) => {
+        if (i === 0) el.textContent = t.maxLabel + ': 25,999';
+        else if (i === 1) el.textContent = t.maxLabel + ': 52,999';
+        else if (i === 2) el.textContent = t.noMax;
+      });
+
+      // Update how section
+      const howTitle = document.querySelector('.how-section .section-title');
+      if (howTitle) howTitle.textContent = t.howTitle;
+
+      const stepTitles = document.querySelectorAll('.step-title');
+      const stepDescs = document.querySelectorAll('.step-desc');
+      if (stepTitles[0]) { stepTitles[0].textContent = t.step1Title; stepDescs[0].textContent = t.step1Desc; }
+      if (stepTitles[1]) { stepTitles[1].textContent = t.step2Title; stepDescs[1].textContent = t.step2Desc; }
+      if (stepTitles[2]) { stepTitles[2].textContent = t.step3Title; stepDescs[2].textContent = t.step3Desc; }
+
+      // Update footer
+      const footerText = document.querySelector('.footer-text');
+      if (footerText) footerText.textContent = t.footerText;
+
+      const footerCopy = document.querySelector('.footer-copy');
+      if (footerCopy) footerCopy.textContent = t.footerCopy;
+
+      // Update modals
+      const profileModalTitle = document.querySelector('#profile-modal .modal-title');
+      if (profileModalTitle) profileModalTitle.textContent = t.profileTitle;
+
+      const profileModalSub = document.querySelector('#profile-modal .modal-subtitle');
+      if (profileModalSub) profileModalSub.textContent = t.profileSubtitle;
+
+      const walletModalTitle = document.querySelector('#wallet-modal .modal-title');
+      if (walletModalTitle) walletModalTitle.textContent = t.walletModalTitle;
+
+      const walletModalSub = document.querySelector('#wallet-modal .modal-subtitle');
+      if (walletModalSub) walletModalSub.textContent = t.walletModalSubtitle;
+
+      const orderModalTitle = document.querySelector('#order-modal .modal-title');
+      if (orderModalTitle) orderModalTitle.textContent = t.confirmTitle;
+
+      const orderModalSub = document.querySelector('#order-modal .modal-subtitle');
+      if (orderModalSub) orderModalSub.textContent = t.confirmSubtitle;
+
+      // Update login modal
+      const loginModalTitle = document.querySelector('#login-modal .modal-title');
+      if (loginModalTitle) loginModalTitle.textContent = t.loginModalTitle || 'تسجيل الدخول';
+
+      const loginModalSub = document.querySelector('#login-modal .modal-subtitle');
+      if (loginModalSub) loginModalSub.textContent = t.loginModalSubtitle || 'سجل دخولك لإتمام طلبات الشحن';
+
+      // Update header login button
+      const headerLoginBtn = document.getElementById('header-login-btn');
+      if (headerLoginBtn) headerLoginBtn.textContent = t.headerLoginBtn || 'تسجيل الدخول';
+
+      // Update user menu items
+      const userMenuItems = document.querySelectorAll('.user-menu-item');
+      if (userMenuItems[0]) userMenuItems[0].innerHTML = '<span>👤</span> ' + (t.profileMenu || 'الملف الشخصي');
+      if (userMenuItems[1]) userMenuItems[1].innerHTML = '<span>💰</span> ' + (t.walletMenu || 'محفظتي');
+      if (userMenuItems[3]) userMenuItems[3].innerHTML = '<span>🚪</span> ' + (t.logoutMenu || 'تسجيل الخروج');
     }
 
     // ===== AUTH =====
@@ -1566,15 +1669,18 @@
     function updateUI() {
       const loginBtn = document.getElementById('header-login-btn');
       const userMenuContainer = document.getElementById('user-menu-container');
+      const walletHeader = document.getElementById('wallet-balance-header');
 
       if (!currentUser) {
         if (loginBtn) loginBtn.style.display = 'inline-flex';
         if (userMenuContainer) userMenuContainer.style.display = 'none';
+        if (walletHeader) walletHeader.style.display = 'none';
         return;
       }
 
       if (loginBtn) loginBtn.style.display = 'none';
       if (userMenuContainer) userMenuContainer.style.display = 'block';
+      if (walletHeader) walletHeader.style.display = 'inline-flex';
 
       const avatarImg = document.getElementById('user-avatar-img');
       const avatarIcon = document.getElementById('user-avatar-icon');
@@ -1585,8 +1691,10 @@
       }
 
       if (userData && userData.wallet !== undefined) {
-        document.getElementById('wallet-amount').innerHTML = 
-          parseFloat(userData.wallet).toFixed(2) + ' <span>$</span>';
+        const balance = parseFloat(userData.wallet).toFixed(2);
+        document.getElementById('wallet-amount').innerHTML = balance + ' <span>$</span>';
+        const headerWallet = document.getElementById('header-wallet-amount');
+        if (headerWallet) headerWallet.textContent = balance;
       }
     }
 
