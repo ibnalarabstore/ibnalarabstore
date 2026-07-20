@@ -219,10 +219,7 @@
     .splash-subtitle {
       font-size: 42px;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--text-primary);
       margin-bottom: 16px;
       opacity: 0;
       letter-spacing: 8px;
@@ -929,6 +926,11 @@
       .header-logo-text { font-size: 15px; }
     }
 
+    #main-app {
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
     .particles {
       position: fixed;
       inset: 0;
@@ -962,21 +964,21 @@
   <div id="splash-screen">
     <div class="splash-bg"></div>
     <div class="splash-content">
-      <div class="splash-icon">
-        <img src="yaahlan icon.jpg" alt="Yaahlan Chat" onerror="this.style.display='none'; this.parentElement.innerHTML='💎';">
+      <div class="splash-icon" style="background: transparent; border: none; box-shadow: none;">
+        <img src="yaahlan icon.jpg" alt="Yaahlan Chat" style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-xl);" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-light), var(--primary))'; this.parentElement.style.border='2px solid var(--border-hover)'; this.parentElement.style.boxShadow='var(--shadow-glow)'; this.parentElement.innerHTML='💎';">
       </div>
 
       <div class="splash-title">
         <span class="anim-slide-left anim-delay-1">IBN</span>
-        <span class="sep anim-fade-in anim-delay-2">—</span>
+        <span class="anim-fade-in anim-delay-2" style="font-size: 28px; font-weight: 300; color: var(--text-secondary); margin: 0 4px;"> </span>
         <span class="anim-drop anim-delay-2">AL</span>
-        <span class="sep anim-fade-in anim-delay-3">—</span>
+        <span class="anim-fade-in anim-delay-3" style="font-size: 28px; font-weight: 300; color: var(--text-secondary); margin: 0 4px;"> </span>
         <span class="anim-slide-right anim-delay-3">ARAB</span>
       </div>
 
       <div class="splash-line anim-fade-in anim-delay-4"></div>
 
-      <div class="splash-subtitle anim-fade-in-up anim-delay-4">شـــحـــن</div>
+      <div class="splash-subtitle anim-fade-in-up anim-delay-4" style="background: none; -webkit-text-fill-color: var(--text-primary); color: var(--text-primary);">شـــحـــن</div>
 
       <div class="splash-desc anim-fade-in anim-delay-5">
         شحن الماسات Yaahlan Chat — سريع، آمن، وموثوق
@@ -996,8 +998,8 @@
     <header class="header">
       <div class="header-inner">
         <a href="#" class="header-logo">
-          <div class="header-logo-icon">
-            <img src="yaahlan icon.jpg" alt="Yaahlan" onerror="this.style.display='none'; this.parentElement.innerHTML='💎';">
+          <div class="header-logo-icon" style="overflow: hidden;">
+            <img src="yaahlan icon.jpg" alt="Yaahlan" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='💎';">
           </div>
           <span class="header-logo-text">IBN<span>AL</span>ARAB<span>STORE</span></span>
         </a>
@@ -1027,8 +1029,8 @@
 
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-icon anim-float">
-        <img src="yaahlan icon.jpg" alt="Yaahlan Chat" onerror="this.style.display='none'; this.parentElement.innerHTML='💎';">
+      <div class="hero-icon anim-float" style="background: transparent; border: none; box-shadow: none;">
+        <img src="yaahlan icon.jpg" alt="Yaahlan Chat" style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-xl);" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, var(--primary-light), var(--primary))'; this.parentElement.style.border='2px solid var(--border-hover)'; this.parentElement.style.boxShadow='var(--shadow-glow)'; this.parentElement.innerHTML='💎';">
       </div>
       <h1 class="hero-title">شحن الماسات <span>Yaahlan Chat</span></h1>
       <p class="hero-subtitle">أسرع وأسهل طريقة لشحن ماسات Yaahlan Chat</p>
@@ -1511,7 +1513,7 @@
             photoURL: ''
           };
           showMainApp();
-          openModal('profile-modal');
+          setTimeout(() => openModal('profile-modal'), 300);
         }, 1500);
       }
     }
@@ -1579,11 +1581,21 @@
     }
 
     function showMainApp() {
-      document.getElementById('splash-screen').classList.add('hidden');
-      document.getElementById('main-app').style.display = 'block';
+      const splash = document.getElementById('splash-screen');
+      const mainApp = document.getElementById('main-app');
+
+      splash.style.opacity = '0';
+      splash.style.visibility = 'hidden';
+      splash.style.pointerEvents = 'none';
+
+      mainApp.style.display = 'block';
+      // Force reflow
+      void mainApp.offsetHeight;
+      mainApp.style.opacity = '1';
+
       setTimeout(() => {
-        document.getElementById('main-app').style.opacity = '1';
-      }, 100);
+        splash.style.display = 'none';
+      }, 800);
     }
 
     // ===== PROFILE =====
