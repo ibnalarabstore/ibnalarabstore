@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>شحن المحفظة | ابن العرب</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #1a1a2e; --primary-light: #16213e; --accent: #e94560; --accent-hover: #ff6b6b;
+            --gold: #ffd700; --success: #00d9a5; --warning: #ffa726; --danger: #ef5350;
+            --text-primary: #ffffff; --text-secondary: #b0b0b0; --text-muted: #6c757d;
+            --bg-dark: #0f0f1a; --bg-card: #1a1a2e; --bg-card-hover: #16213e;
+            --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.15);
+            --shadow: 0 8px 32px rgba(0,0,0,0.3); --shadow-glow: 0 0 30px rgba(233,69,96,0.15);
+            --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-theme="light"] {
+            --text-primary: #1a1a2e; --text-secondary: #4a4a6a; --text-muted: #8888a0;
+            --bg-dark: #f5f5fa; --bg-card: #ffffff; --bg-card-hover: #f0f0f5;
+            --border: rgba(0,0,0,0.08); --border-hover: rgba(0,0,0,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+        .back-btn { position: absolute; top: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 16px; border-radius: var(--radius-md); cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: var(--transition); }
+        .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        .wallet-container { width: 100%; max-width: 500px; margin-top: 60px; }
+
+        .header-card { background: linear-gradient(135deg, var(--accent), var(--primary)); padding: 32px; border-radius: var(--radius-xl); text-align: center; margin-bottom: 24px; box-shadow: var(--shadow-glow); position: relative; overflow: hidden; }
+        .header-card::before { content: '💰'; position: absolute; font-size: 150px; opacity: 0.1; top: -30px; left: -20px; transform: rotate(-15deg); }
+        .wallet-label { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 8px; }
+        .wallet-balance { font-size: 42px; font-weight: 800; color: white; }
+        .wallet-balance span { font-size: 20px; font-weight: 500; }
+
+        .data-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow); }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card-title i { color: var(--accent); }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 600; }
+        .form-input { width: 100%; background: var(--bg-dark); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; color: var(--text-primary); outline: none; font-family: 'Tajawal'; font-size: 16px; transition: var(--transition); }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(233,69,96,0.1); }
+        .form-input::placeholder { color: var(--text-muted); }
+
+        .pay-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .pay-btn { flex: 1; padding: 14px 10px; background: var(--bg-dark); border: 2px solid var(--border); color: var(--text-secondary); border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition); text-align: center; font-size: 14px; font-family: 'Tajawal'; }
+        .pay-btn.active { border-color: var(--accent); color: var(--text-primary); background: rgba(233,69,96,0.1); box-shadow: 0 0 15px rgba(233,69,96,0.1); }
+        .pay-btn i { display: block; font-size: 20px; margin-bottom: 6px; }
+
+        .pay-details { background: var(--bg-dark); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); text-align: center; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .pay-qr { width: 180px; height: 180px; object-fit: cover; margin: 0 auto 16px; display: block; border-radius: var(--radius-md); background: white; padding: 8px; }
+        .copy-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 16px; }
+        .copy-box span { font-size: 14px; word-break: break-all; color: var(--text-primary); font-weight: 600; }
+        .copy-btn { background: var(--accent); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); }
+        .copy-btn:hover { background: var(--accent-hover); }
+
+        .agent-name { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+        .agent-id { font-size: 24px; font-weight: 800; color: var(--success); letter-spacing: 1px; margin-bottom: 16px; }
+        
+        .file-input-wrapper { position: relative; margin-bottom: 10px; }
+        .file-input { width: 100%; padding: 16px; background: var(--bg-card); border: 2px dashed var(--border-hover); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer; text-align: center; transition: var(--transition); }
+        .file-input:hover { border-color: var(--accent); color: var(--accent); }
+        .file-input i { display: block; font-size: 24px; margin-bottom: 8px; }
+        .file-input.has-file { border-color: var(--success); color: var(--success); border-style: solid; }
+        .file-input input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+        .btn-submit { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white; border: none; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(233,69,96,0.3); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 1000; padding: 14px 28px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-hover); color: var(--text-primary); font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: var(--transition); opacity: 0; pointer-events: none; max-width: 90%; text-align: center; }
+        .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { border-color: var(--success); color: var(--success); }
+        .toast.error { border-color: var(--danger); color: var(--danger); }
+
+        .loader-overlay { position: fixed; inset: 0; background: rgba(15,15,26,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .back-btn { top: 10px; right: 10px; padding: 8px 12px; }
+            .wallet-balance { font-size: 32px; }
+            .pay-methods { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <p style="color: var(--text-muted);">جاري معالجة الطلب...</p>
+    </div>
+
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-right"></i> العودة للمتجر
+    </a>
+
+    <div class="wallet-container">
+        <div class="header-card">
+            <div class="wallet-label">رصيد محفظتك الحالي</div>
+            <div class="wallet-balance"><span>$</span> <span id="userBalance">0.00</span></div>
+        </div>
+
+        <div class="data-card">
+            <div class="card-title"><i class="fas fa-money-bill-wave"></i> شحن المحفظة</div>
+            
+            <div class="form-group">
+                <label class="form-label">المبلغ المراد شحنه ($) <span style="color: var(--danger);">*</span></label>
+                <input type="number" class="form-input" id="amountInput" min="10" step="0.01" placeholder="الحد الأدنى 10$">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">طريقة الدفع</label>
+                <div class="pay-methods">
+                    <button type="button" class="pay-btn active" onclick="selectMethod('shamcash', this)">
+                        <i class="fas fa-money-check-alt"></i>
+                        شام كاش
+                    </button>
+                    <button type="button" class="pay-btn" onclick="selectMethod('yaahlan', this)">
+                        <i class="fas fa-mobile-alt"></i>
+                        تطبيق Yaahlan
+                    </button>
+                </div>
+            </div>
+
+            <!-- تفاصيل شام كاش -->
+            <div id="shamcash-details" class="pay-details">
+                <img src="shamcash.png" alt="Sham Cash QR" class="pay-qr" onerror="this.style.display='none';">
+                <div class="copy-box">
+                    <span id="shamAddress">69f42939da5933b868fd9252f0564b78</span>
+                    <button class="copy-btn" onclick="copyAddress()"><i class="fas fa-copy"></i> نسخ</button>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">يرجى تحويل المبلغ ثم رفع صورة الإيصال أدناه</p>
+                
+                <label class="file-input" id="shamFileLabel">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span id="shamFileText">رفع صورة الإيصال</span>
+                    <input type="file" id="shamReceipt" accept="image/*" onchange="handleFileChange(this, 'shamFileLabel', 'shamFileText')">
+                </label>
+            </div>
+
+            <!-- تفاصيل تطبيق Yaahlan -->
+            <div id="yaahlan-details" class="pay-details" style="display: none;">
+                <p style="font-size: 14px; color: var(--text-secondary);">الدفع داخل تطبيق Yaahlan Chat</p>
+                <div style="margin: 12px 0;">
+                    <div class="agent-name">اسم الوكيل</div>
+                    <div style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">وكـــIBN-ALARABـــيــل شــحــن</div>
+                    
+                    <div class="agent-name">رقم الوكيل (ID)</div>
+                    <div class="agent-id">105854105</div>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">يرجى الدفع ثم رفع صورة الإيصال من داخل التطبيق</p>
+                
+                <label class="file-input" id="yaaFileLabel">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span id="yaaFileText">رفع صورة الإيصال</span>
+                    <input type="file" id="yaaReceipt" accept="image/*" onchange="handleFileChange(this, 'yaaFileLabel', 'yaaFileText')">
+                </label>
+            </div>
+
+            <button class="btn-submit" onclick="submitTopup()" style="margin-top: 20px;">
+                <i class="fas fa-paper-plane"></i> تأكيد طلب الشحن
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
+            authDomain: "ibnalarabstore.firebaseapp.com",
+            projectId: "ibnalarabstore",
+            storageBucket: "ibnalarabstore.firebasestorage.app",
+            messagingSenderId: "805953255088",
+            appId: "1:805953255088:web:19e1cfaeb51bed5e9d6d75",
+            measurementId: "G-58BRLWTPDY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const TELEGRAM_BOT_TOKEN = '8518381523:AAFDqycozfxspfPQ_jCud5zDHng23hlUz_k';
+        const TELEGRAM_CHAT_ID = '7975754347';
+
+        let currentUser = null;
+        let userData = null;
+        let selectedMethod = 'shamcash';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        userData = userDoc.data();
+                        if (userData.isBlocked === true) {
+                            showToast("تم حظر حسابك.", "error");
+                            setTimeout(() => window.location.href = "index.html", 2000);
+                            return;
+                        }
+                        document.getElementById("userBalance").innerText = parseFloat(userData.wallet || 0).toFixed(2);
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                } catch (error) {
+                    showToast("حدث خطأ أثناء جلب البيانات", "error");
+                }
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        window.selectMethod = (method, btn) => {
+            selectedMethod = method;
+            document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('shamcash-details').style.display = method === 'shamcash' ? 'block' : 'none';
+            document.getElementById('yaahlan-details').style.display = method === 'yaahlan' ? 'block' : 'none';
+        };
+
+        window.copyAddress = () => {
+            const addr = document.getElementById('shamAddress').innerText;
+            navigator.clipboard.writeText(addr).then(() => {
+                showToast('تم نسخ العنوان بنجاح', 'success');
+            }).catch(() => {
+                showToast('تعذر نسخ العنوان', 'error');
+            });
+        };
+
+        window.handleFileChange = (input, labelId, textId) => {
+            const label = document.getElementById(labelId);
+            const text = document.getElementById(textId);
+            if (input.files.length > 0) {
+                label.classList.add('has-file');
+                text.innerText = input.files[0].name.substring(0, 20) + '...';
+            } else {
+                label.classList.remove('has-file');
+                text.innerText = 'رفع صورة الإيصال';
+            }
+        };
+
+        window.submitTopup = async () => {
+            const amount = parseFloat(document.getElementById('amountInput').value) || 0;
+            if (amount < 10) {
+                showToast('الحد الأدنى للشحن هو 10$', 'error');
+                return;
+            }
+
+            const fileInput = selectedMethod === 'shamcash' ? document.getElementById('shamReceipt') : document.getElementById('yaaReceipt');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showToast('الرجاء رفع صورة الإيصال', 'error');
+                return;
+            }
+
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+
+            const uName = userData.name || 'مستخدم';
+            const uPhone = userData.phone || 'لا يوجد';
+            const uEmail = currentUser.email || 'لا يوجد';
+            const methodName = selectedMethod === 'shamcash' ? 'شام كاش' : 'تطبيق Yaahlan';
+
+            try {
+                // 1. حفظ الطلب في Firebase
+                await addDoc(collection(db, 'transactions'), {
+                    userId: currentUser.uid,
+                    userName: uName,
+                    userEmail: uEmail,
+                    userPhone: uPhone,
+                    amount: amount,
+                    paymentMethod: methodName,
+                    status: 'pending',
+                    type: 'wallet_topup',
+                    createdAt: new Date().toISOString()
+                });
+
+                // 2. إرسال الصورة والتفاصيل إلى تيلجرام
+                const formData = new FormData();
+                formData.append('chat_id', TELEGRAM_CHAT_ID);
+                formData.append('document', file);
+                formData.append('caption', `💳 *طلب شحن محفظة جديد*\n━━━━━━━━━━━━━━\n👤 *الاسم:* ${uName}\n📧 *البريد:* ${uEmail}\n📱 *الهاتف:* ${uPhone}\n💰 *المبلغ:* ${amount.toFixed(2)} $\n💳 *طريقة الدفع:* ${methodName}\n⏳ *بانتظار تأكيد الإيصال*`);
+
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                loader.style.display = 'none';
+                showToast('⏳ تم إرسال طلبك بنجاح! سيتم إضافة الرصيد بعد تأكيد الإيصال.', 'success');
+                
+                // إفراغ الحقول
+                document.getElementById('amountInput').value = '';
+                fileInput.value = '';
+                handleFileChange(fileInput, selectedMethod === 'shamcash' ? 'shamFileLabel' : 'yaaFileLabel', selectedMethod === 'shamcash' ? 'shamFileText' : 'yaaFileText');
+
+            } catch (error) {
+                loader.style.display = 'none';
+                showToast('حدث خطأ أثناء الإرسال: ' + error.message, 'error');
+            }
+        };
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + (type || '');
+            t.classList.add('active');
+            setTimeout(() => t.classList.remove('active'), 3500);
+        }
+    </script>
+</body>
+</html>
