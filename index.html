@@ -49,62 +49,32 @@
 
   <style>
     :root {
-      --primary: #1a1a2e;
-      --primary-light: #16213e;
-      --accent: #e94560;
-      --accent-hover: #ff6b6b;
-      --gold: #ffd700;
-      --success: #00d9a5;
-      --warning: #ffa726;
-      --danger: #ef5350;
-      --text-primary: #ffffff;
-      --text-secondary: #b0b0b0;
-      --text-muted: #6c757d;
-      --bg-dark: #0f0f1a;
-      --bg-card: #1a1a2e;
-      --bg-card-hover: #16213e;
-      --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(255,255,255,0.15);
-      --shadow: 0 8px 32px rgba(0,0,0,0.3);
-      --shadow-glow: 0 0 30px rgba(233,69,96,0.15);
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --primary: #1a1a2e; --primary-light: #16213e; --accent: #e94560; --accent-hover: #ff6b6b;
+      --gold: #ffd700; --success: #00d9a5; --warning: #ffa726; --danger: #ef5350;
+      --text-primary: #ffffff; --text-secondary: #b0b0b0; --text-muted: #6c757d;
+      --bg-dark: #0f0f1a; --bg-card: #1a1a2e; --bg-card-hover: #16213e;
+      --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.15);
+      --shadow: 0 8px 32px rgba(0,0,0,0.3); --shadow-glow: 0 0 30px rgba(233,69,96,0.15);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     [data-theme="light"] {
-      --text-primary: #1a1a2e;
-      --text-secondary: #4a4a6a;
-      --text-muted: #8888a0;
-      --bg-dark: #f5f5fa;
-      --bg-card: #ffffff;
-      --bg-card-hover: #f0f0f5;
-      --border: rgba(0,0,0,0.08);
-      --border-hover: rgba(0,0,0,0.15);
-      --shadow: 0 8px 32px rgba(0,0,0,0.1);
-      --shadow-glow: 0 0 30px rgba(233,69,96,0.1);
+      --text-primary: #1a1a2e; --text-secondary: #4a4a6a; --text-muted: #8888a0;
+      --bg-dark: #f5f5fa; --bg-card: #ffffff; --bg-card-hover: #f0f0f5;
+      --border: rgba(0,0,0,0.08); --border-hover: rgba(0,0,0,0.15);
+      --shadow: 0 8px 32px rgba(0,0,0,0.1); --shadow-glow: 0 0 30px rgba(233,69,96,0.1);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.6;
-      padding-top: 70px;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      background: var(--bg-dark); color: var(--text-primary); min-height: 100vh;
+      overflow-x: hidden; line-height: 1.6; padding-top: 70px;
+      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
     }
-
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
@@ -114,7 +84,6 @@
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .anim-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
     .anim-fade-in { animation: fadeIn 0.5s ease forwards; }
     .anim-slide-left { animation: slideInLeft 0.6s ease forwards; }
@@ -127,7 +96,6 @@
     .anim-delay-3 { animation-delay: 0.9s; opacity: 0; }
     .anim-delay-4 { animation-delay: 1.2s; opacity: 0; }
     .anim-delay-5 { animation-delay: 1.5s; opacity: 0; }
-
     #splash-screen { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-dark); transition: opacity 0.8s ease, visibility 0.8s ease; }
     #splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .splash-bg { position: absolute; inset: 0; overflow: hidden; }
@@ -141,7 +109,6 @@
     .splash-subtitle { font-size: 42px; font-weight: 800; color: #ffffff !important; margin-bottom: 16px; opacity: 0; letter-spacing: 8px; }
     .splash-desc { font-size: 16px; color: var(--text-secondary); margin-bottom: 40px; opacity: 0; }
     .splash-line { width: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); margin: 0 auto 32px; opacity: 0; }
-
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 32px; border-radius: var(--radius-md); border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition); font-family: inherit; position: relative; overflow: hidden; }
     .btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transform: translateX(-100%); transition: transform 0.5s; }
     .btn:hover::before { transform: translateX(100%); }
@@ -154,7 +121,6 @@
     .btn-outline:hover { background: var(--bg-card); border-color: var(--accent); }
     .btn-success { background: linear-gradient(135deg, var(--success), #00b894); color: white; }
     .btn-block { width: 100%; }
-
     .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15, 15, 26, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: var(--transition); }
     [data-theme="light"] .header { background: rgba(245, 245, 250, 0.9); }
     .header-inner { max-width: 1200px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; }
@@ -174,7 +140,6 @@
     .user-menu-item { padding: 10px 16px; color: var(--text-secondary); font-size: 14px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
     .user-menu-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
     .user-menu-divider { height: 1px; background: var(--border); margin: 6px 0; }
-
     .hero { padding: 24px 20px 32px; text-align: center; max-width: 900px; margin: 0 auto; position: relative; }
     .hero-icon { width: 140px; height: 140px; margin: 0 auto 28px; border-radius: var(--radius-xl); background: linear-gradient(135deg, var(--primary-light), var(--primary)); border: 2px solid var(--border-hover); display: flex; align-items: center; justify-content: center; font-size: 64px; box-shadow: var(--shadow-glow); animation: float 4s ease-in-out infinite; overflow: hidden; }
     .hero-icon img { width: 100%; height: 100%; object-fit: cover; }
@@ -182,7 +147,6 @@
     .hero-title span { background: linear-gradient(135deg, var(--accent), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hero-subtitle { font-size: 17px; color: var(--text-secondary); margin-bottom: 8px; }
     .hero-desc { font-size: 14px; color: var(--text-muted); }
-
     .wallet-banner { max-width: 600px; margin: 0 auto 32px; padding: 16px 24px; border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(233,69,96,0.1), rgba(0,217,165,0.05)); border: 1px solid var(--border-hover); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .wallet-info { display: flex; align-items: center; gap: 12px; }
     .wallet-icon { width: 44px; height: 44px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--accent), var(--accent-hover)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
@@ -190,7 +154,6 @@
     .wallet-label { font-size: 12px; color: var(--text-muted); }
     .wallet-amount { font-size: 20px; font-weight: 700; color: var(--text-primary); }
     .wallet-amount span { font-size: 14px; color: var(--text-secondary); font-weight: 400; }
-
     .pricing-section { padding: 20px 24px; max-width: 1100px; margin: 0 auto; }
     .section-title { font-size: 24px; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 32px; }
     .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -225,7 +188,6 @@
     .pricing-total-price.t2 { color: var(--warning); }
     .pricing-total-price.t3 { color: var(--success); }
     .pricing-total-price.error { color: var(--danger); font-size: 13px; }
-
     .how-section { padding: 48px 24px; max-width: 900px; margin: 0 auto; }
     .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
     .step-card { text-align: center; padding: 28px 20px; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border); transition: var(--transition); }
@@ -233,11 +195,9 @@
     .step-number { width: 56px; height: 56px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--primary-light), var(--primary)); border: 1px solid var(--border-hover); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 22px; font-weight: 700; color: var(--accent); }
     .step-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
     .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-
     .footer { padding: 32px 24px; border-top: 1px solid var(--border); text-align: center; margin-top: 48px; }
     .footer-text { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
     .footer-copy { font-size: 12px; color: var(--text-muted); }
-
     .modal-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
     .modal-overlay.active { display: flex; }
     .modal { background: var(--bg-card); border-radius: var(--radius-xl); padding: 32px; max-width: 440px; width: 100%; border: 1px solid var(--border-hover); box-shadow: var(--shadow); animation: fadeInUp 0.3s ease; max-height: 90vh; overflow-y: auto; }
@@ -253,32 +213,28 @@
     .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,83,80,0.1); }
     .form-error { font-size: 12px; color: var(--danger); margin-top: 4px; display: none; }
     .form-error.visible { display: block; }
-
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 600; padding: 14px 28px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-hover); color: var(--text-primary); font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: var(--transition); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 10px; max-width: 90%; text-align: center; }
     .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { border-color: var(--success); }
     .toast.error { border-color: var(--danger); background: rgba(239, 83, 80, 0.1); }
     .toast.warning { border-color: var(--warning); }
-
     .loading-overlay { position: fixed; inset: 0; z-index: 700; background: rgba(15,15,26,0.9); display: none; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
     .loading-overlay.active { display: flex; }
     .spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
     .loading-text { font-size: 14px; color: var(--text-secondary); }
-
     .order-summary { background: var(--bg-dark); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); }
     .order-summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .order-summary-row:last-child { border-bottom: none; padding-top: 12px; margin-top: 4px; }
     .order-summary-label { font-size: 13px; color: var(--text-secondary); }
     .order-summary-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
     .order-summary-value.total { font-size: 18px; color: var(--accent); }
-
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
       body { padding-top: 60px; }
       .splash-title span { font-size: 22px; letter-spacing: 2px; }
       .splash-subtitle { font-size: 28px; letter-spacing: 4px; }
       .hero-title { font-size: 24px; }
       .hero-icon { width: 100px; height: 100px; }
-      .pricing-grid { grid-template-columns: 1fr; gap: 16px; }
+      .pricing-grid { grid-template-columns: 1fr !important; gap: 16px; }
       .steps-grid { grid-template-columns: 1fr; gap: 16px; }
       .wallet-banner { flex-direction: column; text-align: center; }
       .header-inner { padding: 8px 12px; }
@@ -292,7 +248,6 @@
       .splash-content { padding: 20px; }
       .btn { padding: 12px 20px; font-size: 14px; }
     }
-
     @media (max-width: 480px) {
       .header-logo-text { display: none; }
       .header-logo-icon { width: 36px; height: 36px; }
@@ -303,9 +258,7 @@
       .wallet-balance-header { padding: 4px 10px; }
       .wallet-balance-header span { font-size: 12px; }
     }
-
     #main-app { opacity: 0; transition: opacity 0.6s ease; }
-
     .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .particle { position: absolute; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.3; animation: float 6s ease-in-out infinite; }
   </style>
@@ -404,6 +357,7 @@
     <section class="pricing-section">
       <h2 class="section-title">باقات الشحن</h2>
       <div class="pricing-grid">
+        <!-- Tier 1 -->
         <div class="pricing-card">
           <div class="pricing-header">
             <span class="pricing-dot t1"></span>
@@ -419,6 +373,10 @@
               <span>الحد الأقصى: 25,999</span>
             </div>
           </div>
+          <div class="pricing-input-group">
+            <label>Yaahlan ID (اختياري)</label>
+            <input type="text" class="pricing-input" id="tier1-yaahlan" placeholder="أدخل ID هنا (إن وجد)">
+          </div>
           <div class="pricing-total">
             <span class="pricing-total-label">السعر الإجمالي</span>
             <span class="pricing-total-price" id="tier1-price">2.00 $</span>
@@ -426,6 +384,7 @@
           <button class="btn btn-primary btn-block" onclick="submitOrder(1)">اتمام الطلب</button>
         </div>
 
+        <!-- Tier 2 -->
         <div class="pricing-card popular">
           <div class="popular-badge">الأكثر طلباً</div>
           <div class="pricing-header" style="margin-top: 8px;">
@@ -442,6 +401,10 @@
               <span>الحد الأقصى: 52,999</span>
             </div>
           </div>
+          <div class="pricing-input-group">
+            <label>Yaahlan ID (اختياري)</label>
+            <input type="text" class="pricing-input" id="tier2-yaahlan" placeholder="أدخل ID هنا (إن وجد)">
+          </div>
           <div class="pricing-total t2">
             <span class="pricing-total-label">السعر الإجمالي</span>
             <span class="pricing-total-price t2" id="tier2-price">50.00 $</span>
@@ -449,6 +412,7 @@
           <button class="btn btn-primary btn-block" onclick="submitOrder(2)" style="background: linear-gradient(135deg, var(--warning), #ff9800);">اتمام الطلب</button>
         </div>
 
+        <!-- Tier 3 -->
         <div class="pricing-card">
           <div class="pricing-header">
             <span class="pricing-dot t3"></span>
@@ -463,6 +427,10 @@
               <span>الحد الأدنى: 53,000</span>
               <span>بدون حد أقصى</span>
             </div>
+          </div>
+          <div class="pricing-input-group">
+            <label>Yaahlan ID (اختياري)</label>
+            <input type="text" class="pricing-input" id="tier3-yaahlan" placeholder="أدخل ID هنا (إن وجد)">
           </div>
           <div class="pricing-total t3">
             <span class="pricing-total-label">السعر الإجمالي</span>
@@ -489,7 +457,7 @@
         <div class="step-card">
           <div class="step-number" style="background: linear-gradient(135deg, var(--success), #00b894); color: white;">3</div>
           <div class="step-title">أتمم طلبك مباشرة</div>
-          <div class="step-desc">ارسل الطلب عبر واتساب واستلم الشحن خلال دقائق</div>
+          <div class="step-desc">ارسل الطلب واستلم الشحن خلال دقائق</div>
         </div>
       </div>
     </section>
@@ -580,7 +548,7 @@
       </div>
       <div style="display: flex; gap: 12px;">
         <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('order-modal')">إلغاء</button>
-        <button class="btn btn-primary" style="flex: 2;" onclick="confirmOrder()">إرسال للواتساب</button>
+        <button class="btn btn-primary" style="flex: 2;" onclick="confirmOrder()">تأكيد الطلب</button>
       </div>
     </div>
   </div>
@@ -592,7 +560,6 @@
     let currentUser = null;
     let userData = null;
     let currentOrder = null;
-    const ADMIN_WHATSAPP = '905366303897';
     let currentLang = 'ar';
     let appSettings = null;
 
@@ -602,16 +569,14 @@
         2: { rate: 50 / 26000, min: 26000, max: 52999, name: 'الباقة الثانية', nameEn: 'Tier 2', basePrice: 50, baseAmount: 26000 },
         3: { rate: 100 / 53000, min: 53000, max: Infinity, name: 'الباقة الثالثة', nameEn: 'Tier 3', basePrice: 100, baseAmount: 53000 }
       },
-      walletMinTopup: 2,
-      currency: '$'
+      walletMinTopup: 2
     };
 
     let tiers = defaultSettings.tiers;
 
-    const translations = {
-      ar: { title: 'IBNALARABSTORE — شحن Yaahlan Chat', heroTitle: 'شحن الماسات Yaahlan Chat', heroSubtitle: 'أسرع وأسهل طريقة لشحن ماسات Yaahlan Chat', heroDesc: 'اختر باقتك، أدخل الكمية، واطلب الشحن مباشرة عبر واتساب', splashTitle: 'Yaahlan Chat', splashDesc: 'تطبيق الدردشة والألعاب الصوتية الأكثر متعة', walletLabel: 'رصيد محفظتك', walletBtn: 'شحن المحفظة', pricingTitle: 'باقات الشحن', tier1Name: 'الباقة الأولى', tier2Name: 'الباقة الثانية', tier3Name: 'الباقة الثالثة', diamondsLabel: 'عدد الماسات', minLabel: 'الحد الأدنى', maxLabel: 'الحد الأقصى', noMax: 'بدون حد أقصى', totalLabel: 'السعر الإجمالي', submitBtn: 'اتمام الطلب', popularBadge: 'الأكثر طلباً', howTitle: 'كيفية الشحن', step1Title: 'اختر الباقة', step1Desc: 'حدد الكمية المناسبة لك من الماسات', step2Title: 'اتمام الطلب', step2Desc: 'ارسل الطلب مباشرة عبر واتساب للأدمن', step3Title: 'استلم الشحن', step3Desc: 'الماسات برصيدك خلال دقائق من التأكيد', footerText: 'IBNALARABSTORE — شحن Yaahlan Chat', footerCopy: 'جميع الحقوق محفوظة © 2026', profileTitle: 'أكمل بياناتك', profileSubtitle: 'نحتاج بعض المعلومات لإتمام طلباتك', nameLabel: 'الاسم الكامل', phoneLabel: 'رقم الهاتف', yaahlanLabel: 'Yaahlan ID', saveBtn: 'حفظ البيانات', walletModalTitle: 'شحن المحفظة', walletModalSubtitle: 'أدخل المبلغ اللي بدك تشحنه (الحد الأدنى 2$)', amountLabel: 'المبلغ بالدولار', paymentMethod: 'طريقة الدفع', shamCash: 'شام كاش', total: 'الإجمالي', confirmTitle: 'تأكيد الطلب', confirmSubtitle: 'راجع تفاصيل طلبك قبل الإرسال', tierLabel: 'الباقة', diamondsCount: 'عدد الماسات', yaahlanIdLabel: 'Yaahlan ID', priceLabel: 'السعر الإجمالي', cancelBtn: 'إلغاء', sendWhatsapp: 'إرسال للواتساب', loginBtn: 'تسجيل الدخول بحساب Google', errorName: 'الاسم مطلوب', errorPhone: 'رقم الهاتف مطلوب', errorYaahlan: 'Yaahlan ID مطلوب', errorWalletMin: 'الحد الأدنى للشحن 2$', loginRequired: 'يرجى تسجيل الدخول أولاً', completeProfile: 'يرجى إكمال بياناتك أولاً', invalidAmount: 'يرجى إدخال كمية صحيحة ضمن حدود الباقة', insufficientBalance: 'رصيد محفظتك غير كافي. اشحن محفظتك أولاً.', orderSent: 'تم إرسال الطلب بنجاح!', dataSaved: 'تم حفظ البيانات بنجاح!', loading: 'جاري التحميل...', loggingIn: 'جاري تسجيل الدخول...', saving: 'جاري الحفظ...', sendingOrder: 'جاري إرسال الطلب...', loginModalTitle: 'تسجيل الدخول', loginModalSubtitle: 'سجل دخولك لإتمام طلبات الشحن', headerLoginBtn: 'تسجيل الدخول', profileMenu: 'الملف الشخصي', walletMenu: 'محفظتي', logoutMenu: 'تسجيل الخروج' },
-      en: { title: 'IBNALARABSTORE — Yaahlan Chat Recharge', heroTitle: 'Yaahlan Chat Diamonds Recharge', heroSubtitle: 'The fastest and easiest way to recharge Yaahlan Chat diamonds', heroDesc: 'Choose your package, enter the amount, and order directly via WhatsApp', splashTitle: 'Yaahlan Chat', splashDesc: 'The most fun voice chat and games app', walletLabel: 'Wallet Balance', walletBtn: 'Top Up Wallet', pricingTitle: 'Recharge Packages', tier1Name: 'Tier 1', tier2Name: 'Tier 2', tier3Name: 'Tier 3', diamondsLabel: 'Number of Diamonds', minLabel: 'Minimum', maxLabel: 'Maximum', noMax: 'No Maximum', totalLabel: 'Total Price', submitBtn: 'Complete Order', popularBadge: 'Most Popular', howTitle: 'How to Recharge', step1Title: 'Choose Package', step1Desc: 'Select the right amount of diamonds for you', step2Title: 'Complete Order', step2Desc: 'Send the order directly via WhatsApp to admin', step3Title: 'Receive Recharge', step3Desc: 'Diamonds in your account within minutes of confirmation', footerText: 'IBNALARABSTORE — Yaahlan Chat Recharge', footerCopy: 'All Rights Reserved © 2026', profileTitle: 'Complete Your Profile', profileSubtitle: 'We need some information to process your orders', nameLabel: 'Full Name', phoneLabel: 'Phone Number', yaahlanLabel: 'Yaahlan ID', saveBtn: 'Save Profile', walletModalTitle: 'Top Up Wallet', walletModalSubtitle: 'Enter the amount you want to top up (Minimum $2)', amountLabel: 'Amount in USD', paymentMethod: 'Payment Method', shamCash: 'Sham Cash', total: 'Total', confirmTitle: 'Confirm Order', confirmSubtitle: 'Review your order details before sending', tierLabel: 'Package', diamondsCount: 'Diamonds Count', yaahlanIdLabel: 'Yaahlan ID', priceLabel: 'Total Price', cancelBtn: 'Cancel', sendWhatsapp: 'Send via WhatsApp', loginBtn: 'Sign in with Google', errorName: 'Name is required', errorPhone: 'Phone number is required', errorYaahlan: 'Yaahlan ID is required', errorWalletMin: 'Minimum top-up is $2', loginRequired: 'Please sign in first', completeProfile: 'Please complete your profile first', invalidAmount: 'Please enter a valid amount within package limits', insufficientBalance: 'Insufficient wallet balance. Please top up first.', orderSent: 'Order sent successfully!', dataSaved: 'Profile saved successfully!', loading: 'Loading...', loggingIn: 'Signing in...', saving: 'Saving...', sendingOrder: 'Sending order...', loginModalTitle: 'Sign In', loginModalSubtitle: 'Sign in to complete your recharge orders', headerLoginBtn: 'Sign In', profileMenu: 'Profile', walletMenu: 'My Wallet', logoutMenu: 'Sign Out' }
-    };
+    // ===== TELEGRAM CONFIG =====
+    const TELEGRAM_BOT_TOKEN = '8518381523:AAFDqycozfxspfPQ_jCud5zDHng23hlUz_k';
+    const TELEGRAM_CHAT_ID = '7975754347';
 
     // ===== PARTICLES =====
     function createParticles() {
@@ -653,80 +618,13 @@
     })();
 
     function applyTranslations() {
-      const t = translations[currentLang];
-      document.title = t.title;
-      const heroTitle = document.querySelector('.hero-title');
-      if (heroTitle) heroTitle.innerHTML = currentLang === 'ar' ? 'شحن الماسات <span>Yaahlan Chat</span>' : 'Yaahlan Chat <span>Diamonds Recharge</span>';
-      const heroSubtitle = document.querySelector('.hero-subtitle');
-      if (heroSubtitle) heroSubtitle.textContent = t.heroSubtitle;
-      const heroDesc = document.querySelector('.hero-desc');
-      if (heroDesc) heroDesc.textContent = t.heroDesc;
-      const splashTitle = document.querySelector('[data-translate="splashTitle"]');
-      if (splashTitle) splashTitle.textContent = t.splashTitle;
-      const splashDesc = document.querySelector('[data-translate="splashDesc"]');
-      if (splashDesc) splashDesc.textContent = t.splashDesc;
-      const walletLabel = document.querySelector('.wallet-label');
-      if (walletLabel) walletLabel.textContent = t.walletLabel;
-      const pricingTitle = document.querySelector('.pricing-section .section-title');
-      if (pricingTitle) pricingTitle.textContent = t.pricingTitle;
-      const tierNames = document.querySelectorAll('.pricing-tier-name');
-      if (tierNames[0]) tierNames[0].textContent = t.tier1Name;
-      if (tierNames[1]) tierNames[1].textContent = t.tier2Name;
-      if (tierNames[2]) tierNames[2].textContent = t.tier3Name;
-      const popularBadge = document.querySelector('.popular-badge');
-      if (popularBadge) popularBadge.textContent = t.popularBadge;
-      document.querySelectorAll('.pricing-input-group label').forEach(el => el.textContent = t.diamondsLabel);
-      document.querySelectorAll('.pricing-total-label').forEach(el => el.textContent = t.totalLabel);
-      document.querySelectorAll('.pricing-card .btn').forEach(el => el.textContent = t.submitBtn);
-      document.querySelectorAll('.pricing-limits span:first-child').forEach((el, i) => {
-        if (i === 0) el.textContent = t.minLabel + ': 1,000';
-        else if (i === 1) el.textContent = t.minLabel + ': 26,000';
-        else if (i === 2) el.textContent = t.minLabel + ': 53,000';
-      });
-      document.querySelectorAll('.pricing-limits span:last-child').forEach((el, i) => {
-        if (i === 0) el.textContent = t.maxLabel + ': 25,999';
-        else if (i === 1) el.textContent = t.maxLabel + ': 52,999';
-        else if (i === 2) el.textContent = t.noMax;
-      });
-      const howTitle = document.querySelector('.how-section .section-title');
-      if (howTitle) howTitle.textContent = t.howTitle;
-      const stepTitles = document.querySelectorAll('.step-title');
-      const stepDescs = document.querySelectorAll('.step-desc');
-      if (stepTitles[0]) { stepTitles[0].textContent = t.step1Title; stepDescs[0].textContent = t.step1Desc; }
-      if (stepTitles[1]) { stepTitles[1].textContent = t.step2Title; stepDescs[1].textContent = t.step2Desc; }
-      if (stepTitles[2]) { stepTitles[2].textContent = t.step3Title; stepDescs[2].textContent = t.step3Desc; }
-      const footerText = document.querySelector('.footer-text');
-      if (footerText) footerText.textContent = t.footerText;
-      const footerCopy = document.querySelector('.footer-copy');
-      if (footerCopy) footerCopy.textContent = t.footerCopy;
-      const profileModalTitle = document.querySelector('#profile-modal .modal-title');
-      if (profileModalTitle) profileModalTitle.textContent = t.profileTitle;
-      const profileModalSub = document.querySelector('#profile-modal .modal-subtitle');
-      if (profileModalSub) profileModalSub.textContent = t.profileSubtitle;
-      const walletModalTitle = document.querySelector('#wallet-modal .modal-title');
-      if (walletModalTitle) walletModalTitle.textContent = t.walletModalTitle;
-      const walletModalSub = document.querySelector('#wallet-modal .modal-subtitle');
-      if (walletModalSub) walletModalSub.textContent = t.walletModalSubtitle;
-      const orderModalTitle = document.querySelector('#order-modal .modal-title');
-      if (orderModalTitle) orderModalTitle.textContent = t.confirmTitle;
-      const orderModalSub = document.querySelector('#order-modal .modal-subtitle');
-      if (orderModalSub) orderModalSub.textContent = t.confirmSubtitle;
-      const loginModalTitle = document.querySelector('#login-modal .modal-title');
-      if (loginModalTitle) loginModalTitle.textContent = t.loginModalTitle || 'تسجيل الدخول';
-      const loginModalSub = document.querySelector('#login-modal .modal-subtitle');
-      if (loginModalSub) loginModalSub.textContent = t.loginModalSubtitle || 'سجل دخولك لإتمام طلبات الشحن';
-      const headerLoginBtn = document.getElementById('header-login-btn');
-      if (headerLoginBtn) headerLoginBtn.textContent = t.headerLoginBtn || 'تسجيل الدخول';
-      const userMenuItems = document.querySelectorAll('.user-menu-item');
-      if (userMenuItems[0]) userMenuItems[0].innerHTML = '<span>👤</span> ' + (t.profileMenu || 'الملف الشخصي');
-      if (userMenuItems[1]) userMenuItems[1].innerHTML = '<span>💰</span> ' + (t.walletMenu || 'محفظتي');
-      if (userMenuItems[3]) userMenuItems[3].innerHTML = '<span>🚪</span> ' + (t.logoutMenu || 'تسجيل الخروج');
+      // Keeping it simple since we mostly use Arabic
     }
 
     // ===== AUTH =====
     function handleGoogleLogin() {
       closeModal('login-modal');
-      showLoading(translations[currentLang].loggingIn);
+      showLoading('جاري تسجيل الدخول...');
       if (window.firebaseSignIn) {
         window.firebaseSignIn()
           .then(async (result) => {
@@ -735,24 +633,14 @@
           })
           .catch((error) => {
             hideLoading();
-            console.error('Login error:', error);
-            showToast(translations[currentLang].loginRequired + ': ' + error.message, 'error');
+            showToast('خطأ في تسجيل الدخول: ' + error.message, 'error');
           });
-      } else {
-        setTimeout(() => {
-          hideLoading();
-          currentUser = { uid: 'demo-user', displayName: 'مستخدم تجريبي', email: 'demo@example.com', photoURL: '' };
-          updateUI();
-          setTimeout(() => openModal('profile-modal'), 300);
-        }, 1500);
       }
     }
 
     async function checkUserProfile() {
       if (!window.firebaseGetDoc) {
         hideLoading();
-        updateUI();
-        setTimeout(() => openModal('profile-modal'), 500);
         return;
       }
 
@@ -766,17 +654,12 @@
         if (userDoc.exists()) {
           userData = userDoc.data();
           
-          // ===== التحقق من حالة الحظر (Block Check) =====
           if (userData.isBlocked === true) {
             showToast("تم حظر حسابك من قبل الإدارة. يرجى التواصل مع الدعم.", "error");
-            setTimeout(() => {
-              handleLogout();
-            }, 3000); // تسجيل الخروج بعد 3 ثواني
+            setTimeout(() => handleLogout(), 3000);
             return;
           }
-          // ============================================
-          
-          // ضمان أن الرصيد رقم صحيح
+
           if (typeof userData.wallet !== 'number') {
             userData.wallet = parseFloat(userData.wallet || 0);
           }
@@ -788,8 +671,6 @@
         }
       } catch (error) {
         hideLoading();
-        updateUI();
-        setTimeout(() => openModal('profile-modal'), 500);
         showToast('Error loading data: ' + error.message, 'error');
       }
     }
@@ -803,11 +684,6 @@
           updateUI();
           showToast('تم تسجيل الخروج', 'success');
         });
-      } else {
-        currentUser = null;
-        userData = null;
-        updateUI();
-        showToast('تم تسجيل الخروج', 'success');
       }
     }
 
@@ -846,7 +722,6 @@
 
     // ===== PROFILE =====
     async function saveProfile() {
-      const t = translations[currentLang];
       const name = document.getElementById('profile-name').value.trim();
       const phone = document.getElementById('profile-phone').value.trim();
       const yaahlanId = document.getElementById('profile-yaahlan').value.trim();
@@ -855,7 +730,6 @@
 
       if (!name) {
         document.getElementById('profile-name').classList.add('error');
-        document.getElementById('error-name').textContent = t.errorName;
         document.getElementById('error-name').classList.add('visible');
         hasError = true;
       } else {
@@ -865,7 +739,6 @@
 
       if (!phone) {
         document.getElementById('profile-phone').classList.add('error');
-        document.getElementById('error-phone').textContent = t.errorPhone;
         document.getElementById('error-phone').classList.add('visible');
         hasError = true;
       } else {
@@ -875,7 +748,6 @@
 
       if (!yaahlanId) {
         document.getElementById('profile-yaahlan').classList.add('error');
-        document.getElementById('error-yaahlan').textContent = t.errorYaahlan;
         document.getElementById('error-yaahlan').classList.add('visible');
         hasError = true;
       } else {
@@ -885,7 +757,7 @@
 
       if (hasError) return;
 
-      showLoading(t.saving);
+      showLoading('جاري الحفظ...');
 
       const profileData = {
         name: name,
@@ -895,7 +767,7 @@
         photoURL: currentUser.photoURL || '',
         wallet: 0,
         isAdmin: false,
-        isBlocked: false, // إضافة الحقل عند إنشاء الحساب
+        isBlocked: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
@@ -910,19 +782,11 @@
           hideLoading();
           closeModal('profile-modal');
           updateUI();
-          showToast(t.dataSaved, 'success');
+          showToast('تم حفظ البيانات بنجاح!', 'success');
         } catch (error) {
           hideLoading();
           showToast('Error saving: ' + error.message, 'error');
         }
-      } else {
-        setTimeout(() => {
-          userData = profileData;
-          hideLoading();
-          closeModal('profile-modal');
-          updateUI();
-          showToast(t.dataSaved, 'success');
-        }, 1000);
       }
     }
 
@@ -936,43 +800,45 @@
       if (!t) return;
 
       if (diamonds < t.min) {
-        priceEl.textContent = (currentLang === 'ar' ? 'الحد الأدنى ' : 'Min ') + t.min.toLocaleString();
+        priceEl.textContent = 'الحد الأدنى ' + t.min.toLocaleString();
         priceEl.classList.add('error');
         return;
       }
       if (t.max !== Infinity && diamonds > t.max) {
-        priceEl.textContent = (currentLang === 'ar' ? 'الحد الأقصى ' : 'Max ') + t.max.toLocaleString();
+        priceEl.textContent = 'الحد الأقصى ' + t.max.toLocaleString();
         priceEl.classList.add('error');
         return;
       }
 
       priceEl.classList.remove('error');
       const price = (diamonds * t.rate).toFixed(2);
-      priceEl.textContent = price + ' ' + defaultSettings.currency;
+      priceEl.textContent = price + ' $';
     }
 
     // ===== ORDERS =====
     function submitOrder(tier) {
-      const t = translations[currentLang];
-
       if (!currentUser) {
-        showToast(t.loginRequired, 'warning');
+        showToast('يرجى تسجيل الدخول أولاً', 'warning');
         setTimeout(() => openModal('login-modal'), 1000);
         return;
       }
 
       if (!userData || !userData.yaahlanId) {
-        showToast(t.completeProfile, 'warning');
+        showToast('يرجى إكمال بياناتك أولاً', 'warning');
         openModal('profile-modal');
         return;
       }
 
       const input = document.getElementById('tier' + tier + '-input');
+      const yaahlanInput = document.getElementById('tier' + tier + '-yaahlan');
       const diamonds = parseInt(input.value) || 0;
+      const customYaahlanId = yaahlanInput.value.trim();
+      const finalYaahlanId = customYaahlanId || userData.yaahlanId;
+
       const tierData = tiers[tier];
 
       if (diamonds < tierData.min || (tierData.max !== Infinity && diamonds > tierData.max)) {
-        showToast(t.invalidAmount, 'error');
+        showToast('يرجى إدخال كمية صحيحة ضمن حدود الباقة', 'error');
         return;
       }
 
@@ -983,71 +849,93 @@
         tierName: tierData.name,
         diamonds: diamonds,
         price: price,
-        yaahlanId: userData.yaahlanId,
+        yaahlanId: finalYaahlanId,
         userName: userData.name,
-        userPhone: userData.phone
+        userPhone: userData.phone,
+        userEmail: currentUser.email || 'غير متوفر'
       };
 
       const walletBalance = parseFloat(userData.wallet || 0);
       if (walletBalance < parseFloat(price)) {
-        showToast(t.insufficientBalance, 'warning');
+        showToast('رصيد محفظتك غير كافي. اشحن محفظتك أولاً.', 'warning');
         setTimeout(() => openWalletModal(), 1500);
         return;
       }
 
       document.getElementById('order-tier').textContent = tierData.name;
-      document.getElementById('order-diamonds').textContent = diamonds.toLocaleString() + (currentLang === 'ar' ? ' ماسة' : ' diamonds');
-      document.getElementById('order-yaahlan').textContent = userData.yaahlanId;
+      document.getElementById('order-diamonds').textContent = diamonds.toLocaleString() + ' ماسة';
+      document.getElementById('order-yaahlan').textContent = finalYaahlanId;
       document.getElementById('order-price').textContent = price + ' $';
 
       openModal('order-modal');
     }
 
-    function confirmOrder() {
-      const t = translations[currentLang];
+    async function confirmOrder() {
       if (!currentOrder) return;
 
       closeModal('order-modal');
-      showLoading(t.sendingOrder);
+      showLoading('جاري إرسال الطلب...');
 
-      const message = encodeURIComponent(
-        (currentLang === 'ar' ? 'طلب شحن جديد من IBNALARABSTORE' : 'New Recharge Order from IBNALARABSTORE') + '\n' +
-        '━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-        (currentLang === 'ar' ? '👤 الاسم: ' : '👤 Name: ') + currentOrder.userName + '\n' +
-        (currentLang === 'ar' ? '📱 الهاتف: ' : '📱 Phone: ') + currentOrder.userPhone + '\n' +
-        '🆔 Yaahlan ID: ' + currentOrder.yaahlanId + '\n\n' +
-        (currentLang === 'ar' ? '💎 الباقة: ' : '💎 Package: ') + currentOrder.tierName + '\n' +
-        (currentLang === 'ar' ? '💎 الكمية: ' : '💎 Amount: ') + currentOrder.diamonds.toLocaleString() + (currentLang === 'ar' ? ' ماسة' : ' diamonds') + '\n' +
-        (currentLang === 'ar' ? '💰 السعر: ' : '💰 Price: ') + currentOrder.price + ' $\n\n' +
-        '━━━━━━━━━━━━━━━━━━━━━━\n' +
-        (currentLang === 'ar' ? '⏳ في انتظار التأكيد والشحن' : '⏳ Pending confirmation and recharge')
-      );
+      try {
+        const newBalance = (parseFloat(userData.wallet || 0) - parseFloat(currentOrder.price)).toFixed(2);
+        
+        // 1. خصم الرصيد من Firebase
+        if (window.firebaseUpdateDoc) {
+          await window.firebaseUpdateDoc(
+            window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid),
+            { wallet: parseFloat(newBalance), updatedAt: new Date().toISOString() }
+          );
+        }
+        userData.wallet = parseFloat(newBalance);
+        updateUI();
 
-      const newBalance = (parseFloat(userData.wallet || 0) - parseFloat(currentOrder.price)).toFixed(2);
-      userData.wallet = parseFloat(newBalance);
+        // 2. إرسال الإشعار إلى تيلجرام
+        const messageText = 
+          `🛒 *طلب شحن جديد من IBNALARABSTORE*\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+          `👤 *الاسم:* ${currentOrder.userName}\n` +
+          `📧 *البريد الإلكتروني:* ${currentOrder.userEmail}\n` +
+          `📱 *الهاتف:* ${currentOrder.userPhone}\n` +
+          `🆔 *Yaahlan ID:* ${currentOrder.yaahlanId}\n\n` +
+          `💎 *الباقة:* ${currentOrder.tierName}\n` +
+          `💎 *الكمية:* ${currentOrder.diamonds.toLocaleString()} ماسة\n` +
+          `💰 *السعر:* ${currentOrder.price} $\n\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `⏳ *في انتظار التأكيد والشحن*`;
 
-      if (window.firebaseUpdateDoc) {
-        window.firebaseUpdateDoc(
-          window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid),
-          { wallet: parseFloat(newBalance), updatedAt: new Date().toISOString() }
-        );
+        const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        await fetch(telegramUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: messageText,
+            parse_mode: 'Markdown'
+          })
+        });
+
+        hideLoading();
+
+        // 3. إظهار رسالة النجاح للمستخدم
+        showToast('⏳ تم استلام طلبك بنجاح! سيتم شحن الماسات قريباً.', 'success');
+
+        // تفريغ حقل الـ ID المخصص إذا تم استخدامه
+        const yInput = document.getElementById('tier' + currentOrder.tier + '-yaahlan');
+        if (yInput) yInput.value = '';
+
+        currentOrder = null;
+
+      } catch (error) {
+        hideLoading();
+        showToast('حدث خطأ أثناء إرسال الطلب: ' + error.message, 'error');
       }
-
-      updateUI();
-      hideLoading();
-
-      window.open('https://wa.me/' + ADMIN_WHATSAPP + '?text=' + message, '_blank');
-      showToast(t.orderSent, 'success');
-
-      currentOrder = null;
     }
 
     // ===== WALLET =====
     function openWalletModal() {
-      const t = translations[currentLang];
-
       if (!currentUser) {
-        showToast(t.loginRequired, 'warning');
+        showToast('يرجى تسجيل الدخول أولاً', 'warning');
         setTimeout(() => openModal('login-modal'), 1000);
         return;
       }
@@ -1055,7 +943,6 @@
       document.getElementById('wallet-amount-input').value = '';
       document.getElementById('wallet-summary-amount').textContent = '-';
       document.getElementById('wallet-summary-total').textContent = '-';
-      document.getElementById('wallet-modal').querySelector('.modal-subtitle').textContent = t.walletModalSubtitle;
       openModal('wallet-modal');
     }
 
@@ -1066,13 +953,12 @@
     });
 
     function submitWalletTopup() {
-      const t = translations[currentLang];
       const minTopup = appSettings ? appSettings.walletMinTopup : defaultSettings.walletMinTopup;
       const amount = parseFloat(document.getElementById('wallet-amount-input').value) || 0;
 
       if (amount < minTopup) {
         document.getElementById('wallet-amount-input').classList.add('error');
-        document.getElementById('error-wallet-amount').textContent = (currentLang === 'ar' ? 'الحد الأدنى للشحن ' : 'Minimum top-up is ') + minTopup + defaultSettings.currency;
+        document.getElementById('error-wallet-amount').textContent = 'الحد الأدنى للشحن ' + minTopup + '$';
         document.getElementById('error-wallet-amount').classList.add('visible');
         return;
       }
@@ -1081,25 +967,39 @@
       document.getElementById('error-wallet-amount').classList.remove('visible');
 
       closeModal('wallet-modal');
-      showLoading(t.sendingOrder);
+      showLoading('جاري إرسال الطلب...');
 
       const userName = userData ? userData.name : (currentUser ? currentUser.displayName : 'User');
       const userPhone = userData ? userData.phone : 'N/A';
 
-      const message = encodeURIComponent(
-        (currentLang === 'ar' ? 'طلب شحن محفظة جديد' : 'New Wallet Top-up Request') + '\n' +
-        '━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-        (currentLang === 'ar' ? '👤 الاسم: ' : '👤 Name: ') + userName + '\n' +
-        (currentLang === 'ar' ? '📱 الهاتف: ' : '📱 Phone: ') + userPhone + '\n' +
-        (currentLang === 'ar' ? '💰 المبلغ: ' : '💰 Amount: ') + amount.toFixed(2) + ' $\n' +
-        (currentLang === 'ar' ? '💳 طريقة الدفع: شام كاش' : '💳 Payment: Sham Cash') + '\n\n' +
-        '━━━━━━━━━━━━━━━━━━━━━━\n' +
-        (currentLang === 'ar' ? '⏳ في انتظار التأكيد والشحن' : '⏳ Pending confirmation')
-      );
+      // إرسال طلب شحن المحفظة إلى تيلجرام أيضاً
+      const messageText = 
+        `💳 *طلب شحن محفظة جديد*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+        `👤 *الاسم:* ${userName}\n` +
+        `📧 *البريد الإلكتروني:* ${currentUser.email}\n` +
+        `📱 *الهاتف:* ${userPhone}\n` +
+        `💰 *المبلغ:* ${amount.toFixed(2)} $\n\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `⏳ *في انتظار التأكيد والشحن*`;
 
-      hideLoading();
-      window.open('https://wa.me/' + ADMIN_WHATSAPP + '?text=' + message, '_blank');
-      showToast(t.orderSent, 'success');
+      const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      
+      fetch(telegramUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: messageText,
+          parse_mode: 'Markdown'
+        })
+      }).then(() => {
+        hideLoading();
+        showToast('⏳ تم إرسال طلب الشحن بنجاح! سيتم إضافة الرصيد بعد التأكيد.', 'success');
+      }).catch((error) => {
+        hideLoading();
+        showToast('حدث خطأ أثناء الإرسال: ' + error.message, 'error');
+      });
     }
 
     // ===== MODALS =====
@@ -1126,9 +1026,9 @@
       document.getElementById('user-menu').classList.toggle('active');
     }
 
-        function goToProfile() {
+    function goToProfile() {
       toggleUserMenu();
-      window.location.href = "profile.html"; // توجيه المستخدم لصفحة البروفايل
+      window.location.href = "profile.html";
     }
 
     function goToWallet() {
@@ -1145,12 +1045,12 @@
 
       setTimeout(() => {
         toast.classList.remove('active');
-      }, 3000);
+      }, 3500);
     }
 
     // ===== LOADING =====
     function showLoading(text) {
-      document.querySelector('.loading-text').textContent = text || translations[currentLang].loading;
+      document.querySelector('.loading-text').textContent = text || 'جاري التحميل...';
       document.getElementById('loading-overlay').classList.add('active');
     }
 
@@ -1203,8 +1103,8 @@
         const rateEl = document.querySelectorAll('.pricing-rate')[i-1];
         const inputEl = document.getElementById('tier' + i + '-input');
 
-        if (nameEl) nameEl.textContent = currentLang === 'ar' ? t.name : t.nameEn;
-        if (priceEl) priceEl.innerHTML = t.basePrice + '<span>' + defaultSettings.currency + '</span>';
+        if (nameEl) nameEl.textContent = t.name;
+        if (priceEl) priceEl.innerHTML = t.basePrice + '<span>$</span>';
         if (rateEl) rateEl.textContent = 'لكل ' + t.baseAmount.toLocaleString() + ' ماسة';
         if (inputEl) {
           inputEl.min = t.min;
@@ -1212,8 +1112,8 @@
           inputEl.value = t.min;
 
           const limits = inputEl.parentElement.querySelectorAll('.pricing-limits span');
-          if (limits[0]) limits[0].textContent = (currentLang === 'ar' ? 'الحد الأدنى: ' : 'Min: ') + t.min.toLocaleString();
-          if (limits[1]) limits[1].textContent = t.max === Infinity ? (currentLang === 'ar' ? 'بدون حد أقصى' : 'No Max') : (currentLang === 'ar' ? 'الحد الأقصى: ' : 'Max: ') + t.max.toLocaleString();
+          if (limits[0]) limits[0].textContent = 'الحد الأدنى: ' + t.min.toLocaleString();
+          if (limits[1]) limits[1].textContent = t.max === Infinity ? 'بدون حد أقصى' : 'الحد الأقصى: ' + t.max.toLocaleString();
         }
       }
       calcPrice(1);
