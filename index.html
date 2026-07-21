@@ -129,17 +129,21 @@
     .pricing-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
     .pricing-dot { width: 10px; height: 10px; border-radius: 50%; }
     .pricing-dot.t1 { background: var(--accent); } .pricing-dot.t2 { background: var(--warning); } .pricing-dot.t3 { background: var(--success); }
+    .pricing-tier-name { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
     .pricing-price { font-size: 40px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; line-height: 1; }
+    .pricing-rate { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
     .pricing-input-group { margin-bottom: 16px; }
     .pricing-input-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
     .pricing-input { width: 100%; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-dark); color: var(--text-primary); font-size: 16px; font-family: inherit; outline: none; }
     .pricing-input:focus { border-color: var(--accent); }
+    .pricing-limits { display: flex; justify-content: space-between; margin-top: 6px; }
+    .pricing-limits span { font-size: 11px; color: var(--text-muted); }
     .pricing-total { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid var(--border); }
     .pricing-total-price { font-size: 22px; font-weight: 700; color: var(--accent); }
 
     .how-section { padding: 48px 24px; max-width: 900px; margin: 0 auto; }
     .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
-    .step-card { text-align: center; padding: 28px 20px; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border); transition: var(--transition); }
+    .step-card { text-align: center; padding: 28px 20px; border-radius: var(--radius-lg); background: var(--bg-card); border: 1px solid var(--border); transition: var(--transition); cursor: pointer; }
     .step-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
     .step-number { width: 56px; height: 56px; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--primary-light), var(--primary)); border: 1px solid var(--border-hover); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 22px; font-weight: 700; color: var(--accent); }
     .step-title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
@@ -161,19 +165,6 @@
     .form-error { font-size: 12px; color: var(--danger); margin-top: 4px; display: none; }
     .form-error.visible { display: block; }
 
-    /* عناصر شحن المحفظة */
-    .pay-methods { display: flex; gap: 10px; margin-bottom: 20px; }
-    .pay-btn { flex: 1; padding: 12px; background: var(--bg-dark); border: 2px solid var(--border); color: var(--text-secondary); border-radius: var(--radius-md); cursor: pointer; font-weight: 600; transition: var(--transition); text-align: center; font-size: 13px; }
-    .pay-btn.active { border-color: var(--accent); color: var(--text-primary); background: rgba(233,69,96,0.1); }
-    .pay-details { background: var(--bg-dark); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); text-align: center; }
-    .pay-qr { width: 180px; height: 180px; object-fit: cover; margin: 0 auto 12px; display: block; border-radius: var(--radius-md); background: white; padding: 8px; }
-    .copy-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 12px; }
-    .copy-box span { font-size: 13px; word-break: break-all; }
-    .copy-btn { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-    .file-input { width: 100%; padding: 10px; background: var(--bg-card); border: 2px dashed var(--border-hover); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer; }
-    .agent-name { font-size: 18px; font-weight: 700; color: var(--success); margin: 8px 0; }
-    .agent-id { font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: 1px; margin-bottom: 12px; }
-
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 1000; padding: 14px 28px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-hover); color: var(--text-primary); font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: var(--transition); opacity: 0; max-width: 90%; text-align: center; }
     .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { border-color: var(--success); }
@@ -194,7 +185,6 @@
     }
     @media (max-width: 480px) {
       .header-logo-text { display: none; }
-      .pay-methods { flex-direction: column; }
     }
   </style>
 </head>
@@ -273,13 +263,13 @@
       <div class="pricing-grid">
         <!-- Tier 1 -->
         <div class="pricing-card">
-          <div class="pricing-header"><span class="pricing-dot t1"></span><span>الباقة الأولى</span></div>
+          <div class="pricing-header"><span class="pricing-dot t1"></span><span class="pricing-tier-name">الباقة الأولى</span></div>
           <div class="pricing-price">2<span>$</span></div>
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">لكل 1,000 ماسة</div>
+          <div class="pricing-rate">لكل 1,000 ماسة</div>
           <div class="pricing-input-group">
             <label>عدد الماسات</label>
             <input type="number" class="pricing-input" id="tier1-input" min="1000" max="25999" value="1000" oninput="calcPrice(1)">
-            <div style="display: flex; justify-content: space-between; margin-top: 6px;"><span style="font-size: 11px; color: var(--text-muted);">أدنى: 1,000</span><span style="font-size: 11px; color: var(--text-muted);">أقصى: 25,999</span></div>
+            <div class="pricing-limits"><span>الحد الأدنى: 1,000</span><span>الحد الأقصى: 25,999</span></div>
           </div>
           <div class="pricing-input-group">
             <label>Yaahlan ID</label>
@@ -295,13 +285,13 @@
         <!-- Tier 2 -->
         <div class="pricing-card popular">
           <div class="popular-badge">الأكثر طلباً</div>
-          <div class="pricing-header" style="margin-top: 8px;"><span class="pricing-dot t2"></span><span>الباقة الثانية</span></div>
+          <div class="pricing-header" style="margin-top: 8px;"><span class="pricing-dot t2"></span><span class="pricing-tier-name">الباقة الثانية</span></div>
           <div class="pricing-price">50<span>$</span></div>
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">لكل 26,000 ماسة</div>
+          <div class="pricing-rate">لكل 26,000 ماسة</div>
           <div class="pricing-input-group">
             <label>عدد الماسات</label>
             <input type="number" class="pricing-input" id="tier2-input" min="26000" max="52999" value="26000" oninput="calcPrice(2)">
-            <div style="display: flex; justify-content: space-between; margin-top: 6px;"><span style="font-size: 11px; color: var(--text-muted);">أدنى: 26,000</span><span style="font-size: 11px; color: var(--text-muted);">أقصى: 52,999</span></div>
+            <div class="pricing-limits"><span>الحد الأدنى: 26,000</span><span>الحد الأقصى: 52,999</span></div>
           </div>
           <div class="pricing-input-group">
             <label>Yaahlan ID</label>
@@ -316,13 +306,13 @@
 
         <!-- Tier 3 -->
         <div class="pricing-card">
-          <div class="pricing-header"><span class="pricing-dot t3"></span><span>الباقة الثالثة</span></div>
+          <div class="pricing-header"><span class="pricing-dot t3"></span><span class="pricing-tier-name">الباقة الثالثة</span></div>
           <div class="pricing-price">100<span>$</span></div>
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">لكل 53,000 ماسة</div>
+          <div class="pricing-rate">لكل 53,000 ماسة</div>
           <div class="pricing-input-group">
             <label>عدد الماسات</label>
             <input type="number" class="pricing-input" id="tier3-input" min="53000" value="53000" oninput="calcPrice(3)">
-            <div style="display: flex; justify-content: space-between; margin-top: 6px;"><span style="font-size: 11px; color: var(--text-muted);">أدنى: 53,000</span><span style="font-size: 11px; color: var(--text-muted);">بدون حد أقصى</span></div>
+            <div class="pricing-limits"><span>الحد الأدنى: 53,000</span><span>بدون حد أقصى</span></div>
           </div>
           <div class="pricing-input-group">
             <label>Yaahlan ID</label>
@@ -340,7 +330,7 @@
     <section class="how-section">
       <h2 class="section-title">كيفية الشحن</h2>
       <div class="steps-grid">
-        <div class="step-card" onclick="openWalletModal()" style="cursor: pointer;">
+        <div class="step-card" onclick="goToWallet()">
           <div class="step-number" style="background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white;">1</div>
           <div class="step-title">اشحن محفظتك</div>
           <div class="step-desc">أضف رصيد لمحفظتك عبر شام كاش أو من داخل تطبيق Yaahlan</div>
@@ -387,53 +377,6 @@
     </div>
   </div>
 
-  <!-- Modal شحن المحفظة الجديد -->
-  <div class="modal-overlay" id="wallet-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">شحن المحفظة</div>
-        <div class="modal-subtitle">الحد الأدنى للشحن 10$</div>
-      </div>
-      
-      <div class="form-group">
-        <label>المبلغ بالدولار <span style="color: var(--danger);">*</span></label>
-        <input type="number" class="form-input" id="wallet-amount-input" min="10" step="0.01" placeholder="مثلاً: 15">
-      </div>
-
-      <div class="form-group">
-        <label>طريقة الدفع</label>
-        <div class="pay-methods">
-          <button type="button" class="pay-btn active" onclick="selectPayMethod('shamcash')">شام كاش</button>
-          <button type="button" class="pay-btn" onclick="selectPayMethod('yaahlan')">الدفع داخل تطبيق Yaahlan</button>
-        </div>
-      </div>
-
-      <!-- تفاصيل شام كاش -->
-      <div id="shamcash-details" class="pay-details">
-        <img src="shamcash.png" alt="Sham Cash QR" class="pay-qr" onerror="this.style.display='none';">
-        <div class="copy-box">
-          <span id="shamcash-address">69f42939da5933b868fd9252f0564b78</span>
-          <button class="copy-btn" onclick="copyShamAddress()">نسخ</button>
-        </div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">يرجى تحويل المبلغ ثم رفع صورة الإيصال</p>
-        <input type="file" class="file-input" id="shamcash-receipt" accept="image/*">
-      </div>
-
-      <!-- تفاصيل تطبيق Yaahlan -->
-      <div id="yaahlan-details" class="pay-details" style="display: none;">
-        <p style="font-size: 13px; color: var(--text-muted);">الدفع داخل تطبيق Yaahlan</p>
-        <div class="agent-name">وكـــIBN-ALARABـــيــل شــحــن</div>
-        <div class="agent-id">105854105</div>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">يرجى الدفع ثم رفع صورة الإيصال من داخل التطبيق</p>
-        <input type="file" class="file-input" id="yaahlan-receipt" accept="image/*">
-      </div>
-
-      <div style="margin-top: 20px;">
-        <button class="btn btn-primary btn-block" onclick="submitWalletTopup()">إتمام الشحن وإرسال الإيصال</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Modal تأكيد الطلب -->
   <div class="modal-overlay" id="order-modal">
     <div class="modal">
@@ -458,9 +401,19 @@
 
   <script>
     // ===== GLOBAL STATE =====
-    let currentUser = null, userData = null, currentOrder = null;
+    let currentUser = null, userData = null, currentOrder = null, appSettings = null;
     const TELEGRAM_BOT_TOKEN = '8518381523:AAFDqycozfxspfPQ_jCud5zDHng23hlUz_k';
     const TELEGRAM_CHAT_ID = '7975754347';
+
+    const defaultSettings = {
+      tiers: {
+        1: { rate: 2 / 1000, min: 1000, max: 25999, name: 'الباقة الأولى', nameEn: 'Tier 1', basePrice: 2, baseAmount: 1000 },
+        2: { rate: 50 / 26000, min: 26000, max: 52999, name: 'الباقة الثانية', nameEn: 'Tier 2', basePrice: 50, baseAmount: 26000 },
+        3: { rate: 100 / 53000, min: 53000, max: Infinity, name: 'الباقة الثالثة', nameEn: 'Tier 3', basePrice: 100, baseAmount: 53000 }
+      },
+      walletMinTopup: 2
+    };
+    let tiers = defaultSettings.tiers;
 
     // ===== THEME =====
     function toggleTheme() {
@@ -527,24 +480,58 @@
       } catch (e) { hideLoading(); showToast('Error: ' + e.message, 'error'); }
     }
 
-    // ===== PRICING =====
+    // ===== PRICING (ديناميكية من لوحة الأدمن) =====
+    async function loadSettings() {
+      if (window.firebaseGetDoc) {
+        try {
+          const settingsDoc = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDb, 'settings', 'pricing'));
+          if (settingsDoc.exists()) {
+            appSettings = settingsDoc.data();
+            tiers = appSettings.tiers || defaultSettings.tiers;
+            updatePricingUI();
+          }
+        } catch (e) { console.log('Using default settings'); }
+      }
+    }
+
+    function updatePricingUI() {
+      for (let i = 1; i <= 3; i++) {
+        const t = tiers[i];
+        const nameEl = document.querySelectorAll('.pricing-tier-name')[i-1];
+        const priceEl = document.querySelectorAll('.pricing-price')[i-1];
+        const rateEl = document.querySelectorAll('.pricing-rate')[i-1];
+        const inputEl = document.getElementById('tier' + i + '-input');
+        if (nameEl) nameEl.textContent = t.name;
+        if (priceEl) priceEl.innerHTML = t.basePrice + '<span>$</span>';
+        if (rateEl) rateEl.textContent = 'لكل ' + t.baseAmount.toLocaleString() + ' ماسة';
+        if (inputEl) {
+          inputEl.min = t.min; inputEl.max = t.max === Infinity ? '' : t.max; inputEl.value = t.min;
+          const limits = inputEl.parentElement.querySelectorAll('.pricing-limits span');
+          if (limits[0]) limits[0].textContent = 'الحد الأدنى: ' + t.min.toLocaleString();
+          if (limits[1]) limits[1].textContent = t.max === Infinity ? 'بدون حد أقصى' : 'الحد الأقصى: ' + t.max.toLocaleString();
+        }
+      }
+      calcPrice(1); calcPrice(2); calcPrice(3);
+    }
+
     function calcPrice(tier) {
       const input = document.getElementById('tier' + tier + '-input'), priceEl = document.getElementById('tier' + tier + '-price'), d = parseInt(input.value) || 0;
-      const rates = { 1: 2/1000, 2: 50/26000, 3: 100/53000 }, mins = { 1: 1000, 2: 26000, 3: 53000 }, maxs = { 1: 25999, 2: 52999, 3: Infinity };
-      if (d < mins[tier]) { priceEl.textContent = 'الحد الأدنى ' + mins[tier]; priceEl.classList.add('error'); return; }
-      if (d > maxs[tier]) { priceEl.textContent = 'الحد الأقصى ' + maxs[tier]; priceEl.classList.add('error'); return; }
-      priceEl.classList.remove('error'); priceEl.textContent = (d * rates[tier]).toFixed(2) + ' $';
+      const t = tiers[tier];
+      if (!t) return;
+      if (d < t.min) { priceEl.textContent = 'الحد الأدنى ' + t.min.toLocaleString(); priceEl.classList.add('error'); return; }
+      if (t.max !== Infinity && d > t.max) { priceEl.textContent = 'الحد الأقصى ' + t.max.toLocaleString(); priceEl.classList.add('error'); return; }
+      priceEl.classList.remove('error'); priceEl.textContent = (d * t.rate).toFixed(2) + ' $';
     }
 
     function submitOrder(tier) {
       if (!currentUser) { showToast('يرجى تسجيل الدخول أولاً', 'warning'); setTimeout(() => openModal('login-modal'), 1000); return; }
       if (!userData || !userData.yaahlanId) { showToast('يرجى إكمال بياناتك أولاً', 'warning'); openModal('profile-modal'); return; }
       const d = parseInt(document.getElementById('tier'+tier+'-input').value)||0, yId = document.getElementById('tier'+tier+'-yaahlan').value.trim() || userData.yaahlanId;
-      const names = {1:'الأولى',2:'الثانية',3:'الثالثة'}, rates = {1:2/1000,2:50/26000,3:100/53000}, mins={1:1000,2:26000,3:53000}, maxs={1:25999,2:52999,3:Infinity};
-      if (d < mins[tier] || d > maxs[tier]) return showToast('كمية غير صحيحة', 'error');
-      const price = (d * rates[tier]).toFixed(2);
-      currentOrder = { tier, tierName: 'الباقة '+names[tier], diamonds: d, price, yaahlanId: yId, userName: userData.name, userPhone: userData.phone, userEmail: currentUser.email };
-      if (parseFloat(userData.wallet||0) < parseFloat(price)) { showToast('رصيدك غير كافي', 'warning'); setTimeout(()=>openWalletModal(), 1000); return; }
+      const tierData = tiers[tier];
+      if (d < tierData.min || (tierData.max !== Infinity && d > tierData.max)) return showToast('كمية غير صحيحة', 'error');
+      const price = (d * tierData.rate).toFixed(2);
+      currentOrder = { tier, tierName: tierData.name, diamonds: d, price, yaahlanId: yId, userName: userData.name, userPhone: userData.phone, userEmail: currentUser.email };
+      if (parseFloat(userData.wallet||0) < parseFloat(price)) { showToast('رصيدك غير كافي', 'warning'); setTimeout(()=>goToWallet(), 1500); return; }
       document.getElementById('order-tier').textContent = currentOrder.tierName; document.getElementById('order-diamonds').textContent = d + ' ماسة'; document.getElementById('order-yaahlan').textContent = yId; document.getElementById('order-price').textContent = price + ' $';
       openModal('order-modal');
     }
@@ -563,65 +550,10 @@
       } catch (e) { hideLoading(); showToast('خطأ: ' + e.message, 'error'); }
     }
 
-    // ===== WALLET =====
-    function openWalletModal() {
+    // ===== WALLET REDIRECT =====
+    function goToWallet() {
       if (!currentUser) { showToast('يرجى تسجيل الدخول أولاً', 'warning'); setTimeout(() => openModal('login-modal'), 1000); return; }
-      document.getElementById('wallet-amount-input').value = ''; 
-      document.getElementById('shamcash-receipt').value = '';
-      document.getElementById('yaahlan-receipt').value = '';
-      openModal('wallet-modal');
-    }
-
-    function selectPayMethod(method) {
-      document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('shamcash-details').style.display = method === 'shamcash' ? 'block' : 'none';
-      document.getElementById('yaahlan-details').style.display = method === 'yaahlan' ? 'block' : 'none';
-    }
-
-    function copyShamAddress() {
-      const addr = document.getElementById('shamcash-address').innerText;
-      navigator.clipboard.writeText(addr).then(() => showToast('تم نسخ العنوان بنجاح', 'success'));
-    }
-
-    async function submitWalletTopup() {
-      const amount = parseFloat(document.getElementById('wallet-amount-input').value) || 0;
-      if (amount < 10) return showToast('الحد الأدنى للشحن 10$', 'error');
-
-      const activeMethod = document.querySelector('.pay-btn.active').textContent.trim();
-      const isShamcash = document.querySelector('.pay-btn.active').getAttribute('onclick').includes('shamcash');
-      const fileInput = isShamcash ? document.getElementById('shamcash-receipt') : document.getElementById('yaahlan-receipt');
-      const file = fileInput.files[0];
-
-      if (!file) return showToast('الرجاء رفع صورة الإيصال', 'error');
-
-      closeModal('wallet-modal'); showLoading('جاري إرسال الطلب...');
-
-      const uName = userData ? userData.name : 'مستخدم', uPhone = userData ? userData.phone : 'لا يوجد';
-      
-      try {
-        // حفظ الطلب في Firebase
-        await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, 'transactions'), {
-          userId: currentUser.uid, userName: uName, userEmail: currentUser.email, userPhone: uPhone, amount: amount, paymentMethod: isShamcash ? 'شام كاش' : 'Yaahlan App', status: 'pending', createdAt: new Date().toISOString()
-        });
-
-        // إرسال الصورة والتفاصيل لتيلجرام
-        const formData = new FormData();
-        formData.append('chat_id', TELEGRAM_CHAT_ID);
-        formData.append('document', file);
-        formData.append('caption', `💳 *طلب شحن محفظة جديد*\n━━━━━━━━━━━━━━\n👤 *الاسم:* ${uName}\n📧 *البريد:* ${currentUser.email}\n📱 *الهاتف:* ${uPhone}\n💰 *المبلغ:* ${amount.toFixed(2)} $\n💳 *طريقة الدفع:* ${isShamcash ? 'شام كاش' : 'تطبيق Yaahlan'}\n⏳ *بانتظار التأكيد*`);
-
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-          method: 'POST',
-          body: formData
-        });
-
-        hideLoading();
-        showToast('⏳ تم إرسال طلبك بنجاح! سيتم إضافة الرصيد بعد تأكيد الإيصال.', 'success');
-      } catch (error) {
-        hideLoading();
-        showToast('حدث خطأ أثناء الإرسال: ' + error.message, 'error');
-      }
+      window.location.href = "wallet.html";
     }
 
     // ===== MODALS & UI =====
@@ -640,6 +572,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', async function() {
+      await loadSettings(); // جلب الأسعار من الأدمن
       if (window.firebaseOnAuth) {
         window.firebaseOnAuth((user) => { if (user) { currentUser = user; checkUserProfile(); } else { updateUI(); } });
       }
