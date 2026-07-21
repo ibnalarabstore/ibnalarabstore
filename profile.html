@@ -20,13 +20,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
 
-        /* زر العودة */
         .back-btn { position: absolute; top: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 16px; border-radius: 10px; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: var(--transition); }
         .back-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         .profile-container { width: 100%; max-width: 600px; margin-top: 60px; }
 
-        /* رأس الملف الشخصي */
         .profile-header { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 32px; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
         .profile-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); opacity: 0.2; }
         .profile-avatar { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-card); background: linear-gradient(135deg, var(--accent-color), var(--accent-gold)); display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; margin: 0 auto 16px; position: relative; z-index: 1; overflow: hidden; }
@@ -34,8 +32,7 @@
         .profile-email { color: var(--text-muted); font-size: 14px; position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .profile-email i { font-size: 12px; color: var(--success); }
 
-        /* بطاقة البيانات */
-        .data-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; }
+        .data-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; margin-bottom: 24px; }
         .card-title { font-size: 18px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--accent-color); }
 
@@ -44,11 +41,8 @@
         .form-label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 13px; }
         .form-input { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 15px; transition: var(--transition); }
         .form-input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
-        
-        /* الحقول غير القابلة للتعديل */
         .form-input.disabled { background: rgba(15, 23, 42, 0.5); color: var(--text-muted); cursor: not-allowed; border-style: dashed; }
         
-        /* رصيد المحفظة */
         .wallet-display { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .wallet-label { color: var(--text-muted); font-size: 14px; display: flex; align-items: center; gap: 8px; }
         .wallet-amount { font-size: 24px; font-weight: 800; color: var(--success); }
@@ -57,13 +51,25 @@
         .btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2); }
         .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* الإشعارات */
+        /* قوائم الطلبات */
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
+        .history-item { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .history-info { display: flex; flex-direction: column; gap: 4px; }
+        .history-title { font-weight: 700; font-size: 15px; }
+        .history-date { font-size: 12px; color: var(--text-muted); }
+        
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .status-pending { background: rgba(255, 167, 38, 0.1); color: var(--warning); border: 1px solid rgba(255, 167, 38, 0.3); }
+        .status-completed { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-cancelled { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 14px; }
+
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); z-index: 1000; padding: 14px 28px; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: var(--transition); opacity: 0; pointer-events: none; }
         .toast.active { transform: translateX(-50%) translateY(0); opacity: 1; }
         .toast.success { border-color: var(--success); }
         .toast.error { border-color: var(--danger); }
 
-        /* شاشة التحميل */
         .loader-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.9); z-index: 2000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -86,7 +92,6 @@
     </a>
 
     <div class="profile-container">
-        <!-- رأس الملف الشخصي -->
         <div class="profile-header">
             <div class="profile-avatar" id="userAvatar">
                 <i class="fas fa-user"></i>
@@ -97,11 +102,8 @@
             </div>
         </div>
 
-        <!-- بيانات المستخدم -->
         <div class="data-card">
             <div class="card-title"><i class="fas fa-id-card"></i> المعلومات الشخصية</div>
-
-            <!-- رصيد المحفظة -->
             <div class="wallet-display">
                 <span class="wallet-label"><i class="fas fa-wallet" style="color: var(--success);"></i> رصيد المحفظة</span>
                 <span class="wallet-amount" id="userWallet">0.00 $</span>
@@ -118,21 +120,34 @@
                         <input type="text" class="form-input" id="userYaahlanId" placeholder="أدخل ID الخاص بك">
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">الاسم الكامل</label>
                     <input type="text" class="form-input" id="userName" placeholder="أدخل اسمك الكامل">
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">رقم الهاتف</label>
                     <input type="tel" class="form-input" id="userPhone" placeholder="+963 9XX XXX XXX">
                 </div>
-
                 <button type="submit" class="btn-save" id="saveBtn">
                     <i class="fas fa-save"></i> حفظ التغييرات
                 </button>
             </form>
+        </div>
+
+        <!-- قسم طلبات الشحن (الماسات) -->
+        <div class="data-card">
+            <div class="card-title"><i class="fas fa-gem"></i> طلبات الشحن</div>
+            <div class="history-list" id="ordersList">
+                <div class="empty-state">جاري جلب الطلبات...</div>
+            </div>
+        </div>
+
+        <!-- قسم طلبات شحن المحفظة -->
+        <div class="data-card">
+            <div class="card-title"><i class="fas fa-money-bill-wave"></i> طلبات شحن المحفظة</div>
+            <div class="history-list" id="walletRequestsList">
+                <div class="empty-state">جاري جلب الطلبات...</div>
+            </div>
         </div>
     </div>
 
@@ -141,7 +156,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
@@ -164,24 +179,17 @@
                 currentUser = user;
                 try {
                     const userDoc = await getDoc(doc(db, "users", user.uid));
-                    
                     if (userDoc.exists()) {
                         const data = userDoc.data();
-                        
-                        // التحقق من الحظر
                         if (data.isBlocked === true) {
                             showToast("تم حظر حسابك من قبل الإدارة.", "error");
                             setTimeout(() => signOut(auth).then(() => window.location.href = "index.html"), 2000);
                             return;
                         }
 
-                        // تعبئة البيانات
                         document.getElementById("userEmail").innerText = user.email || "غير متوفر";
-                        
                         const avatarEl = document.getElementById("userAvatar");
-                        if (user.photoURL) {
-                            avatarEl.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
-                        }
+                        if (user.photoURL) avatarEl.innerHTML = `<img src="${user.photoURL}" alt="Profile">`;
 
                         document.getElementById("userName").value = data.name || '';
                         document.getElementById("userPhone").value = data.phone || '';
@@ -189,14 +197,15 @@
                         document.getElementById("userWallet").innerText = parseFloat(data.wallet || 0).toFixed(2) + ' $';
                         
                         let dateStr = 'غير معروف';
-                        if (data.createdAt) {
-                            try { dateStr = new Date(data.createdAt).toLocaleDateString('ar-EG'); } catch(e){}
-                        }
+                        if (data.createdAt) { try { dateStr = new Date(data.createdAt).toLocaleDateString('ar-EG'); } catch(e){} }
                         document.getElementById("userCreatedAt").value = dateStr;
 
                         document.getElementById('loader').style.display = 'none';
+                        
+                        // جلب الطلبات
+                        await loadUserOrders();
+                        await loadWalletRequests();
                     } else {
-                        // إذا لم يكن لديه حساب في الداتابيز، نوجهه للمتجر لإكمال بياناته
                         window.location.href = "index.html";
                     }
                 } catch (error) {
@@ -209,7 +218,89 @@
             }
         });
 
-        // حفظ التعديلات
+        async function loadUserOrders() {
+            const listEl = document.getElementById('ordersList');
+            try {
+                const q = query(collection(db, "orders"), where("userId", "==", currentUser.uid));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    listEl.innerHTML = '<div class="empty-state">لا توجد طلبات شحن سابقة.</div>';
+                    return;
+                }
+
+                // ترتيب الطلبات يدوياً من الأحدث للأقدم
+                let orders = [];
+                snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                let html = '';
+                orders.forEach(order => {
+                    let dateStr = '-';
+                    try { dateStr = new Date(order.createdAt).toLocaleString('ar-EG'); } catch(e){}
+                    
+                    const status = order.status || 'pending';
+                    let statusClass = 'status-pending', statusText = '⏳ قيد المعالجة';
+                    if (status === 'completed') { statusClass = 'status-completed'; statusText = '✅ مكتمل'; }
+                    if (status === 'cancelled') { statusClass = 'status-cancelled'; statusText = '❌ ملغي'; }
+
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <span class="history-title">${order.diamonds || 0} ماسة - ${order.price || 0}$</span>
+                                <span class="history-date">${dateStr}</span>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                });
+                listEl.innerHTML = html;
+            } catch (error) {
+                listEl.innerHTML = `<div class="empty-state" style="color:var(--danger);">حدث خطأ أثناء جلب الطلبات.</div>`;
+            }
+        }
+
+        async function loadWalletRequests() {
+            const listEl = document.getElementById('walletRequestsList');
+            try {
+                const q = query(collection(db, "transactions"), where("userId", "==", currentUser.uid), where("type", "==", "wallet_topup"));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    listEl.innerHTML = '<div class="empty-state">لا توجد طلبات شحن محفظة سابقة.</div>';
+                    return;
+                }
+
+                let requests = [];
+                snapshot.forEach(doc => requests.push({ id: doc.id, ...doc.data() }));
+                requests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                let html = '';
+                requests.forEach(req => {
+                    let dateStr = '-';
+                    try { dateStr = new Date(req.createdAt).toLocaleString('ar-EG'); } catch(e){}
+                    
+                    const status = req.status || 'pending';
+                    let statusClass = 'status-pending', statusText = '⏳ قيد المعالجة';
+                    if (status === 'completed') { statusClass = 'status-completed'; statusText = '✅ مكتمل'; }
+                    if (status === 'cancelled') { statusClass = 'status-cancelled'; statusText = '❌ ملغي'; }
+
+                    html += `
+                        <div class="history-item">
+                            <div class="history-info">
+                                <span class="history-title">شحن المحفظة بـ ${req.amount || 0}$</span>
+                                <span class="history-date">${dateStr}</span>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                });
+                listEl.innerHTML = html;
+            } catch (error) {
+                listEl.innerHTML = `<div class="empty-state" style="color:var(--danger);">حدث خطأ أثناء جلب الطلبات.</div>`;
+            }
+        }
+
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const saveBtn = document.getElementById('saveBtn');
@@ -229,12 +320,8 @@
 
             try {
                 await updateDoc(doc(db, "users", currentUser.uid), {
-                    name: name,
-                    phone: phone,
-                    yaahlanId: yaahlanId,
-                    updatedAt: new Date().toISOString()
+                    name: name, phone: phone, yaahlanId: yaahlanId, updatedAt: new Date().toISOString()
                 });
-
                 showToast("تم حفظ التغييرات بنجاح!", "success");
             } catch (error) {
                 showToast("حدث خطأ أثناء الحفظ: " + error.message, "error");
