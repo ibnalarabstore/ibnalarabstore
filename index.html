@@ -1126,9 +1126,9 @@
       document.getElementById('user-menu').classList.toggle('active');
     }
 
-    function goToProfile() {
+        function goToProfile() {
       toggleUserMenu();
-      showToast(currentLang === 'ar' ? 'صفحة البروفايل قريباً' : 'Profile page coming soon', 'warning');
+      window.location.href = "profile.html"; // توجيه المستخدم لصفحة البروفايل
     }
 
     function goToWallet() {
