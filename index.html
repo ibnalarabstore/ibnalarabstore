@@ -447,13 +447,21 @@
           if (userData.isBlocked === true) { showToast("تم حظر حسابك.", "error"); setTimeout(() => handleLogout(), 2000); return; }
           if (typeof userData.wallet !== 'number') userData.wallet = parseFloat(userData.wallet || 0);
           updateUI();
-        } else { updateUI(); setTimeout(() => openModal('profile-modal'), 500); }
+          applyCorrectPricing(); // تحديث الأسعار الخاصة بالمستخدم
+        } else { 
+          updateUI(); 
+          applyCorrectPricing(); // العودة للأسعار العامة
+          setTimeout(() => openModal('profile-modal'), 500); 
+        }
       } catch (error) { hideLoading(); showToast('Error: ' + error.message, 'error'); }
     }
 
     function handleLogout() {
       toggleUserMenu();
-      if (window.firebaseSignOut) window.firebaseSignOut().then(() => { currentUser = null; userData = null; updateUI(); });
+      if (window.firebaseSignOut) window.firebaseSignOut().then(() => {
+        currentUser = null; userData = null; updateUI();
+        applyCorrectPricing(); // العودة للأسعار العامة عند تسجيل الخروج
+      });
     }
 
     function updateUI() {
@@ -480,23 +488,32 @@
       } catch (e) { hideLoading(); showToast('Error: ' + e.message, 'error'); }
     }
 
-    // ===== PRICING (ديناميكية من لوحة الأدمن) =====
+    // ===== PRICING (ديناميكية من لوحة الأدمن + الأسعار الخاصة) =====
     async function loadSettings() {
       if (window.firebaseGetDoc) {
         try {
           const settingsDoc = await window.firebaseGetDoc(window.firebaseDoc(window.firebaseDb, 'settings', 'pricing'));
           if (settingsDoc.exists()) {
             appSettings = settingsDoc.data();
-            tiers = appSettings.tiers || defaultSettings.tiers;
-            updatePricingUI();
           }
         } catch (e) { console.log('Using default settings'); }
       }
+      applyCorrectPricing();
+    }
+
+    function applyCorrectPricing() {
+      // إذا كان المستخدم مسجل دخول ولديه أسعار خاصة، استخدمها. وإلا استخدم الأسعار العامة
+      if (userData && userData.customPricing) {
+        tiers = userData.customPricing;
+      } else {
+        tiers = (appSettings && appSettings.tiers) ? appSettings.tiers : defaultSettings.tiers;
+      }
+      updatePricingUI();
     }
 
     function updatePricingUI() {
       for (let i = 1; i <= 3; i++) {
-        const t = tiers[i];
+        const t = { ...defaultSettings.tiers[i], ...(tiers[i] || {}) };
         const nameEl = document.querySelectorAll('.pricing-tier-name')[i-1];
         const priceEl = document.querySelectorAll('.pricing-price')[i-1];
         const rateEl = document.querySelectorAll('.pricing-rate')[i-1];
