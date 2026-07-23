@@ -109,6 +109,10 @@
         .form-row input { width: 100%; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; color: var(--text-main); outline: none; font-family: 'Tajawal'; font-size: 14px; }
         
         .status-select { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 10px; border-radius: 6px; font-family: 'Tajawal'; font-size: 12px; outline: none; cursor: pointer; }
+        .pay-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .pay-btn { flex: 1; padding: 14px 10px; background: var(--bg-main); border: 2px solid var(--border); color: var(--text-muted); border-radius: 12px; cursor: pointer; font-weight: 600; transition: var(--transition); text-align: center; font-size: 14px; font-family: 'Tajawal'; }
+        .pay-btn.active { border-color: var(--accent-color); color: var(--text-main); background: rgba(99, 102, 241, 0.1); }
+        select[multiple] { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: 'Tajawal'; font-size: 14px; }
 
         @media (max-width: 992px) {
             .sidebar { transform: translateX(100%); z-index: 110; width: 250px; }
@@ -117,6 +121,7 @@
             .admin-name-text { display: none; }
             .setting-card, .setting-card-full { flex: 1 1 100%; }
             .info-item { flex: 1 1 100%; }
+            .pay-methods { flex-direction: column; }
         }
     </style>
 </head>
@@ -133,6 +138,7 @@
         <div class="nav-item" onclick="switchTab('orders')"><i class="fas fa-shopping-bag"></i><span class="nav-text">قسم الطلبات</span></div>
         <div class="nav-item" onclick="switchTab('custom')"><i class="fas fa-user-tag"></i><span class="nav-text">الأسعار الخاصة</span></div>
         <div class="nav-item" onclick="switchTab('logs')"><i class="fas fa-history"></i><span class="nav-text">قسم الحركات</span></div>
+        <div class="nav-item" onclick="switchTab('notifications')"><i class="fas fa-bell"></i><span class="nav-text">إرسال الإشعارات</span></div>
         <div class="nav-item" onclick="switchTab('pricing')"><i class="fas fa-tags"></i><span class="nav-text">أسعار الباقات العامة</span></div>
         <div class="nav-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span class="nav-text">تسجيل الخروج</span></div>
     </aside>
@@ -235,7 +241,36 @@
             </div>
         </div>
 
-        <!-- 5. قسم الأسعار العامة -->
+        <!-- 5. قسم الإشعارات -->
+        <div id="notificationsSection" style="display: none;">
+            <div class="data-card">
+                <div class="card-header"><div class="card-title">إرسال إشعار للمستخدمين</div></div>
+                <div class="form-group">
+                    <label class="form-label">عنوان الإشعار</label>
+                    <input type="text" class="form-input" id="notifTitle" placeholder="مثال: عروض الجمعة">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نص الإشعار</label>
+                    <textarea class="form-input" id="notifMessage" rows="4" placeholder="اكتب رسالتك هنا..." style="resize: vertical;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المرسل إليهم</label>
+                    <div class="pay-methods">
+                        <button type="button" class="pay-btn active" id="btnAll" onclick="selectNotifTarget('all')">لجميع المستخدمين</button>
+                        <button type="button" class="pay-btn" id="btnCustom" onclick="selectNotifTarget('custom')">لمستخدمين محددين</button>
+                    </div>
+                </div>
+                <div class="form-group" id="customUsersBox" style="display: none;">
+                    <label class="form-label">اختر المستخدمين (يمكنك اختيار أكثر من واحد بالضغط على Ctrl)</label>
+                    <select id="notifUsersSelect" multiple></select>
+                </div>
+                <button class="btn btn-save" onclick="sendNotifications()" style="width: 100%; padding: 14px; font-size: 15px;">
+                    <i class="fas fa-paper-plane"></i> إرسال الإشعار
+                </button>
+            </div>
+        </div>
+
+        <!-- 6. قسم الأسعار العامة -->
         <div id="pricingSection" style="display: none;">
             <div class="data-card">
                 <div class="card-header">
@@ -318,6 +353,7 @@
         let allUsers = [], allTransactions = [], allOrders = [];
         let currentUserIdToCharge = null, currentCustomUser = null;
         let appSettings = null;
+        let notifTarget = 'all';
 
         const defaultSettings = {
             tiers: {
@@ -355,7 +391,7 @@
                 allTransactions = transSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 
                 let totalCharged = 0;
-                allTransactions.forEach(t => { if(t.type === 'admin_topup') totalCharged += t.amount || 0; });
+                allTransactions.forEach(t => { if(t.type === 'admin_topup' || (t.type === 'wallet_topup' && t.status === 'completed')) totalCharged += t.amount || 0; });
                 document.getElementById("totalChargedAmount").innerText = totalCharged.toFixed(2) + "$";
 
                 const ordersSnap = await getDocs(collection(db, "orders"));
@@ -365,17 +401,19 @@
                 renderOrders();
                 renderLogs();
                 renderCustomUsers();
+                populateNotifUsers();
             } catch (error) { console.error(error); }
         }
 
         // ===== التبويبات =====
         window.switchTab = (tab) => {
-            const tabs = ['users', 'orders', 'custom', 'logs', 'pricing'];
+            const tabs = ['users', 'orders', 'custom', 'logs', 'notifications', 'pricing'];
             const titles = {
                 'users': 'إدارة المستخدمين والمحافظ',
                 'orders': 'إدارة الطلبات',
                 'custom': 'الأسعار الخاصة للمستخدمين',
                 'logs': 'سجل الحركات',
+                'notifications': 'إرسال الإشعارات',
                 'pricing': 'أسعار الباقات العامة'
             };
             
@@ -440,7 +478,11 @@
             try {
                 await updateDoc(doc(db, "users", currentUserIdToCharge), { wallet: increment(amount) });
                 await addDoc(collection(db, "transactions"), { userId: currentUserIdToCharge, userName: user.name, amount, type: 'admin_topup', status: 'completed', date: new Date().toISOString() });
-                alert("تم الشحن بنجاح!");
+                
+                // إرسال إشعار للمستخدم بشحن الرصيد
+                await sendAutoNotification(currentUserIdToCharge, "شحن الرصيد 💰", `تم شحن محفظتك بمبلغ ${amount}$ بنجاح من قبل الإدارة.`);
+                
+                alert("تم الشحن وإرسال الإشعار بنجاح!");
                 closeModal('balanceModal');
                 await loadData();
             } catch (e) { alert("خطأ: " + e.message); }
@@ -514,17 +556,96 @@
         window.updateOrderStatus = async (coll, docId, newStatus, userId, amount) => {
             try {
                 await updateDoc(doc(db, coll, docId), { status: newStatus });
+                
                 if (coll === 'transactions' && newStatus === 'completed') {
                     await updateDoc(doc(db, 'users', userId), { wallet: increment(amount) });
-                    alert("تم تأكيد طلب الشحن وإضافة الرصيد للمستخدم.");
+                    await sendAutoNotification(userId, "اكتمال شحن المحفظة 💰", `تم تأكيد طلبك وإضافة ${amount}$ إلى رصيدك بنجاح.`);
+                    alert("تم تأكيد طلب الشحن وإضافة الرصيد وإرسال إشعار للمستخدم.");
+                }
+                if (coll === 'orders' && newStatus === 'completed') {
+                    await sendAutoNotification(userId, "اكتمال شحن الماسات 💎", "تم شحن ماساتك بنجاح في حسابك. استمتع بوقتك!");
+                    alert("تم تأكيد الطلب وإرسال إشعار للمستخدم.");
                 }
                 if (coll === 'orders' && newStatus === 'cancelled') {
                     await updateDoc(doc(db, 'users', userId), { wallet: increment(amount) });
-                    alert("تم إلغاء الطلب وإرجاع الرصيد للمستخدم.");
+                    await sendAutoNotification(userId, "إلغاء الطلب ❌", "تم إلغاء طلبك وإرجاع المبلغ إلى محفظتك.");
+                    alert("تم إلغاء الطلب وإرجاع الرصيد وإرسال إشعار للمستخدم.");
                 }
+                if (coll === 'transactions' && newStatus === 'cancelled') {
+                    await sendAutoNotification(userId, "رفض طلب الشحن ❌", "تم رفض طلب شحن المحفظة الخاص بك. يرجى التواصل مع الدعم.");
+                    alert("تم إلغاء الطلب وإرسال إشعار للمستخدم.");
+                }
+                
                 await loadData();
             } catch (e) { alert("خطأ في التحديث: " + e.message); }
         };
+
+        // ===== الإشعارات =====
+        window.populateNotifUsers = () => {
+            const select = document.getElementById('notifUsersSelect');
+            select.innerHTML = '';
+            allUsers.forEach(u => {
+                select.innerHTML += `<option value="${u.id}">${u.name || 'بدون اسم'} - ${u.email || ''}</option>`);
+            }
+        };
+
+        window.selectNotifTarget = (target) => {
+            notifTarget = target;
+            document.getElementById('btnAll').classList.remove('active');
+            document.getElementById('btnCustom').classList.remove('active');
+            if(target === 'all') document.getElementById('btnAll').classList.add('active');
+            else document.getElementById('btnCustom').classList.add('active');
+            
+            document.getElementById('customUsersBox').style.display = target === 'custom' ? 'block' : 'none';
+        };
+
+        window.sendNotifications = async () => {
+            const title = document.getElementById('notifTitle').value.trim();
+            const message = document.getElementById('notifMessage').value.trim();
+            if(!title || !message) return alert("الرجاء إدخال العنوان والرسالة.");
+
+            try {
+                if(notifTarget === 'all') {
+                    await addDoc(collection(db, 'notifications'), {
+                        userId: 'all',
+                        title: title,
+                        message: message,
+                        isRead: false,
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    const select = document.getElementById('notifUsersSelect');
+                    const selectedUsers = Array.from(select.selectedOptions).map(opt => opt.value);
+                    if(selectedUsers.length === 0) return alert("الرجاء اختيار مستخدم واحد على الأقل.");
+                    
+                    for(const uid of selectedUsers) {
+                        await addDoc(collection(db, 'notifications'), {
+                            userId: uid,
+                            title: title,
+                            message: message,
+                            isRead: false,
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                }
+                alert("تم إرسال الإشعار بنجاح!");
+                document.getElementById('notifTitle').value = '';
+                document.getElementById('notifMessage').value = '';
+            } catch(e) { alert("خطأ في الإرسال: " + e.message); }
+        };
+
+        // دالة مساعدة للإشعارات التلقائية
+        async function sendAutoNotification(userId, title, message) {
+            try {
+                await addDoc(collection(db, 'notifications'), {
+                    userId: userId,
+                    title: title,
+                    message: message,
+                    isRead: false,
+                    createdAt: new Date().toISOString()
+                });
+            } catch(e) { console.error("Notification error:", e); }
+        }
 
         // ===== الأسعار الخاصة =====
         window.renderCustomUsers = () => {
