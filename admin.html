@@ -585,8 +585,8 @@
             const select = document.getElementById('notifUsersSelect');
             select.innerHTML = '';
             allUsers.forEach(u => {
-                select.innerHTML += `<option value="${u.id}">${u.name || 'بدون اسم'} - ${u.email || ''}</option>`);
-            }
+                select.innerHTML += `<option value="${u.id}">${u.name || 'بدون اسم'} - ${u.email || ''}</option>`;
+            });
         };
 
         window.selectNotifTarget = (target) => {
