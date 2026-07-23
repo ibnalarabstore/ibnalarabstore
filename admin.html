@@ -359,7 +359,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, getDoc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, getDoc, setDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
@@ -423,16 +423,26 @@
                 allOrders = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
                 // جلب الإشعارات
-                const notifSnap = await getDocs(query(collection(db, "notifications"), orderBy("createdAt", "desc")));
-                allNotifications = notifSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                try {
+                    const notifSnap = await getDocs(query(collection(db, "notifications"), orderBy("createdAt", "desc")));
+                    allNotifications = notifSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } catch (e) {
+                    console.warn("فشل جلب الإشعارات:", e);
+                    allNotifications = [];
+                }
 
-                renderUsers();
-                renderOrders();
-                renderLogs();
-                renderCustomUsers();
-                populateNotifUsers();
-                loadNotificationsHistory();
-            } catch (error) { console.error(error); }
+                // استدعاء دوال العرض مع معالجة الأخطاء
+                try { renderUsers(); } catch(e) { console.error("renderUsers error:", e); }
+                try { renderOrders(); } catch(e) { console.error("renderOrders error:", e); }
+                try { renderLogs(); } catch(e) { console.error("renderLogs error:", e); }
+                try { renderCustomUsers(); } catch(e) { console.error("renderCustomUsers error:", e); }
+                try { populateNotifUsers(); } catch(e) { console.error("populateNotifUsers error:", e); }
+                try { loadNotificationsHistory(); } catch(e) { console.error("loadNotificationsHistory error:", e); }
+
+            } catch (error) {
+                console.error("loadData error:", error);
+                alert("حدث خطأ في تحميل البيانات. راجع وحدة التحكم للمزيد.");
+            }
         }
 
         // ===== التبويبات =====
@@ -508,9 +518,7 @@
             try {
                 await updateDoc(doc(db, "users", currentUserIdToCharge), { wallet: increment(amount) });
                 await addDoc(collection(db, "transactions"), { userId: currentUserIdToCharge, userName: user.name, amount, type: 'admin_topup', status: 'completed', date: new Date().toISOString() });
-                
                 await sendAutoNotification(currentUserIdToCharge, "شحن الرصيد 💰", `تم شحن محفظتك بمبلغ ${amount}$ بنجاح من قبل الإدارة.`);
-                
                 alert("تم الشحن وإرسال الإشعار بنجاح!");
                 closeModal('balanceModal');
                 await loadData();
@@ -658,7 +666,7 @@
                 alert("تم إرسال الإشعار بنجاح!");
                 document.getElementById('notifTitle').value = '';
                 document.getElementById('notifMessage').value = '';
-                await loadData(); // تحديث السجل
+                await loadData();
             } catch(e) { alert("خطأ في الإرسال: " + e.message); }
         };
 
@@ -666,7 +674,7 @@
         window.loadNotificationsHistory = () => {
             const container = document.getElementById('notificationsHistoryTable');
             
-            if (allNotifications.length === 0) {
+            if (!allNotifications || allNotifications.length === 0) {
                 container.innerHTML = '<div class="loader">لا توجد إشعارات مرسلة حتى الآن.</div>';
                 return;
             }
@@ -701,16 +709,9 @@
 
         // دالة مساعدة لجلب أسماء المستخدمين من معرفاتهم
         function getUserNames(userId) {
-            // إذا كانت القيمة 'all' أو قيمة واحدة
             if (userId === 'all') return 'جميع المستخدمين';
-            
-            // إذا كانت userId عبارة عن string واحد
             const user = allUsers.find(u => u.id === userId);
-            if (user) return user.name || user.email || userId;
-            
-            // إذا كانت userId تحتوي على فواصل (لحالة تعدد المستخدمين)
-            // لكن في نظامنا كل إشعار له userId واحد، لذلك نرجع المعرف
-            return userId;
+            return user ? (user.name || user.email || userId) : userId;
         }
 
         // دالة مساعدة للإشعارات التلقائية
