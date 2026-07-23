@@ -76,11 +76,14 @@
         .btn-block { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .btn-unblock { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
         .btn-close { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; font-size: 14px; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .btn:hover { opacity: 0.8; }
 
         .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
         .status-active { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .status-blocked { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .status-all { background: rgba(99, 102, 241, 0.1); color: var(--accent-color); }
+        .status-specific { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 
         .loader { text-align: center; padding: 40px; color: var(--text-muted); }
 
@@ -114,6 +117,11 @@
         .pay-btn.active { border-color: var(--accent-color); color: var(--text-main); background: rgba(99, 102, 241, 0.1); }
         select[multiple] { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: 'Tajawal'; font-size: 14px; }
 
+        .notif-target-badge { padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .notif-target-all { background: rgba(99, 102, 241, 0.15); color: var(--accent-color); }
+        .notif-target-specific { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .notif-msg-preview { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
         @media (max-width: 992px) {
             .sidebar { transform: translateX(100%); z-index: 110; width: 250px; }
             .sidebar.active { transform: translateX(0); }
@@ -122,6 +130,7 @@
             .setting-card, .setting-card-full { flex: 1 1 100%; }
             .info-item { flex: 1 1 100%; }
             .pay-methods { flex-direction: column; }
+            .notif-msg-preview { max-width: 80px; }
         }
     </style>
 </head>
@@ -243,8 +252,9 @@
 
         <!-- 5. قسم الإشعارات -->
         <div id="notificationsSection" style="display: none;">
+            <!-- بطاقة إرسال إشعار جديد -->
             <div class="data-card">
-                <div class="card-header"><div class="card-title">إرسال إشعار للمستخدمين</div></div>
+                <div class="card-header"><div class="card-title">إرسال إشعار جديد</div></div>
                 <div class="form-group">
                     <label class="form-label">عنوان الإشعار</label>
                     <input type="text" class="form-input" id="notifTitle" placeholder="مثال: عروض الجمعة">
@@ -267,6 +277,21 @@
                 <button class="btn btn-save" onclick="sendNotifications()" style="width: 100%; padding: 14px; font-size: 15px;">
                     <i class="fas fa-paper-plane"></i> إرسال الإشعار
                 </button>
+            </div>
+
+            <!-- بطاقة سجل الإشعارات المرسلة -->
+            <div class="data-card">
+                <div class="card-header">
+                    <div class="card-title">سجل الإشعارات المرسلة</div>
+                    <button class="btn btn-close" onclick="clearNotificationsHistory()" style="font-size: 12px; padding: 6px 12px;">
+                        <i class="fas fa-trash"></i> حذف الكل
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <div id="notificationsHistoryTable">
+                        <div class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل السجل...</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -334,7 +359,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, increment, addDoc, getDoc, setDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC2GOMPfTAXbqGcnSiwmxiFRwNPgYUBs7I",
@@ -350,7 +375,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allUsers = [], allTransactions = [], allOrders = [];
+        let allUsers = [], allTransactions = [], allOrders = [], allNotifications = [];
         let currentUserIdToCharge = null, currentCustomUser = null;
         let appSettings = null;
         let notifTarget = 'all';
@@ -397,11 +422,16 @@
                 const ordersSnap = await getDocs(collection(db, "orders"));
                 allOrders = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
+                // جلب الإشعارات
+                const notifSnap = await getDocs(query(collection(db, "notifications"), orderBy("createdAt", "desc")));
+                allNotifications = notifSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
                 renderUsers();
                 renderOrders();
                 renderLogs();
                 renderCustomUsers();
                 populateNotifUsers();
+                loadNotificationsHistory();
             } catch (error) { console.error(error); }
         }
 
@@ -479,7 +509,6 @@
                 await updateDoc(doc(db, "users", currentUserIdToCharge), { wallet: increment(amount) });
                 await addDoc(collection(db, "transactions"), { userId: currentUserIdToCharge, userName: user.name, amount, type: 'admin_topup', status: 'completed', date: new Date().toISOString() });
                 
-                // إرسال إشعار للمستخدم بشحن الرصيد
                 await sendAutoNotification(currentUserIdToCharge, "شحن الرصيد 💰", `تم شحن محفظتك بمبلغ ${amount}$ بنجاح من قبل الإدارة.`);
                 
                 alert("تم الشحن وإرسال الإشعار بنجاح!");
@@ -517,7 +546,6 @@
 
         // ===== الطلبات =====
         window.renderOrders = () => {
-            // طلبات الماسات
             const diamondTable = document.getElementById('diamondOrdersTable');
             let dHtml = `<table><thead><tr><th>المستخدم</th><th>الآيدي</th><th>الماسات</th><th>السعر</th><th>الحالة</th></tr></thead><tbody>`;
             if (allOrders.length === 0) dHtml += `<tr><td colspan="5" style="text-align:center; padding:20px;">لا توجد طلبات ماسات.</td></tr>`;
@@ -534,7 +562,6 @@
             dHtml += `</tbody></table>`;
             diamondTable.innerHTML = dHtml;
 
-            // طلبات المحفظة
             const walletTable = document.getElementById('walletOrdersTable');
             const walletReq = allTransactions.filter(t => t.type === 'wallet_topup');
             let wHtml = `<table><thead><tr><th>المستخدم</th><th>المبلغ</th><th>طريقة الدفع</th><th>الحالة</th></tr></thead><tbody>`;
@@ -631,8 +658,60 @@
                 alert("تم إرسال الإشعار بنجاح!");
                 document.getElementById('notifTitle').value = '';
                 document.getElementById('notifMessage').value = '';
+                await loadData(); // تحديث السجل
             } catch(e) { alert("خطأ في الإرسال: " + e.message); }
         };
+
+        // ===== سجل الإشعارات المرسلة =====
+        window.loadNotificationsHistory = () => {
+            const container = document.getElementById('notificationsHistoryTable');
+            
+            if (allNotifications.length === 0) {
+                container.innerHTML = '<div class="loader">لا توجد إشعارات مرسلة حتى الآن.</div>';
+                return;
+            }
+
+            let html = `<table><thead><tr>
+                <th>العنوان</th>
+                <th>نص الإشعار</th>
+                <th>المرسل إليه</th>
+                <th>تاريخ الإرسال</th>
+            </tr></thead><tbody>`;
+
+            allNotifications.forEach(n => {
+                const isAll = n.userId === 'all';
+                const targetLabel = isAll ? 'جميع المستخدمين' : getUserNames(n.userId);
+                const targetBadge = isAll ? 'notif-target-all' : 'notif-target-specific';
+                const targetText = isAll ? 'للجميع' : 'مستخدمين محددين';
+                
+                html += `<tr>
+                    <td style="font-weight: 600;">${n.title || 'بدون عنوان'}</td>
+                    <td class="notif-msg-preview" title="${n.message || ''}">${n.message || ''}</td>
+                    <td>
+                        <span class="notif-target-badge ${targetBadge}">${targetText}</span>
+                        ${!isAll ? `<span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">${targetLabel}</span>` : ''}
+                    </td>
+                    <td style="font-size: 12px; color: var(--text-muted);">${n.createdAt ? new Date(n.createdAt).toLocaleString('ar-EG') : '-'}</td>
+                </tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        };
+
+        // دالة مساعدة لجلب أسماء المستخدمين من معرفاتهم
+        function getUserNames(userId) {
+            // إذا كانت القيمة 'all' أو قيمة واحدة
+            if (userId === 'all') return 'جميع المستخدمين';
+            
+            // إذا كانت userId عبارة عن string واحد
+            const user = allUsers.find(u => u.id === userId);
+            if (user) return user.name || user.email || userId;
+            
+            // إذا كانت userId تحتوي على فواصل (لحالة تعدد المستخدمين)
+            // لكن في نظامنا كل إشعار له userId واحد، لذلك نرجع المعرف
+            return userId;
+        }
 
         // دالة مساعدة للإشعارات التلقائية
         async function sendAutoNotification(userId, title, message) {
@@ -646,6 +725,21 @@
                 });
             } catch(e) { console.error("Notification error:", e); }
         }
+
+        // دالة حذف كل الإشعارات (للأدمن فقط)
+        window.clearNotificationsHistory = async () => {
+            if (!confirm("هل أنت متأكد من حذف جميع الإشعارات؟ هذا الإجراء لا يمكن التراجع عنه.")) return;
+            try {
+                const notifSnap = await getDocs(collection(db, "notifications"));
+                const batch = [];
+                notifSnap.forEach(doc => {
+                    batch.push(deleteDoc(doc.ref));
+                });
+                await Promise.all(batch);
+                alert("تم حذف جميع الإشعارات بنجاح.");
+                await loadData();
+            } catch(e) { alert("خطأ في الحذف: " + e.message); }
+        };
 
         // ===== الأسعار الخاصة =====
         window.renderCustomUsers = () => {
